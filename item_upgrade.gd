@@ -4,7 +4,11 @@ var upgrade_name: String
 var cost: int
 var base_cost: int
 var level: int = 0
+
+# >>> EDITÁVEL: nível máximo do upgrade. Deixe -1 pra ser ilimitado,
+# ou coloque um número (ex: 10) pra travar a compra naquele nível.
 var max_level: int = -1
+
 var modifier: float
 var modifier_type: String
 
@@ -21,6 +25,9 @@ func buy(main) -> bool:
 	if main.aura >= cost:
 		main.aura -= cost
 		level += 1
+		# NÃO MEXER (fórmula): a cada nível o preço sobe.
+		# O 1.5 é o quanto encarece por nível (1.5 = +50% por nível).
+		# >>> Se quiser deixar o jogo mais caro/barato, mude SÓ o número 1.5.
 		cost = int(base_cost * pow(1.5, level))
 		return true
 	return false
