@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://s45o5kmwjqrv"]
+
+[ext_resource type="Script" uid="uid://cd6oxky0n0mwv" path="res://floating_text.gd" id="1_58iww"]
+
+[node name="FloatingText" type="Label" unique_id=1959215261]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_font_sizes/font_size = 40
+script = ExtResource("1_58iww")

@@ -1,0 +1,377 @@
+[gd_scene format=3 uid="uid://cuo6mnqlyjei2"]
+
+[ext_resource type="Script" uid="uid://b6fpoxyrk65wn" path="res://main.gd" id="1_h2yge"]
+[ext_resource type="Texture2D" uid="uid://ckoyxrdmeutv0" path="res://comments-aura.png" id="2_efxa6"]
+[ext_resource type="Texture2D" uid="uid://beh5c35s17kcq" path="res://background1.jpeg" id="2_kek77"]
+[ext_resource type="Script" uid="uid://bvqmaqrktg2s5" path="res://personagem.gd" id="3_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://bqepodg4inb1t" path="res://heart-aura.png" id="3_dg77c"]
+[ext_resource type="Texture2D" uid="uid://ce5lpu4par7tm" path="res://favorites-aura.png" id="4_dg77c"]
+[ext_resource type="Texture2D" uid="uid://ceqydrs7ls87c" path="res://maewing_fram_1.png" id="7_2cqfq"]
+[ext_resource type="Script" uid="uid://evgml6nth8id" path="res://upgrades_screen.gd" id="7_4c57u"]
+[ext_resource type="Texture2D" uid="uid://debblm5b4g8ob" path="res://gym_frame_1.png" id="7_cegan"]
+[ext_resource type="Texture2D" uid="uid://cheug4deiggp2" path="res://67_-_frame_1.png" id="7_dg77c"]
+[ext_resource type="Texture2D" uid="uid://bdra7eh2drlb2" path="res://background2.jpeg" id="8_4c57u"]
+[ext_resource type="Shader" uid="uid://ks2p71s362l6" path="res://main.gdshader" id="8_5vw27"]
+[ext_resource type="Texture2D" uid="uid://nfvdvan3817d" path="res://gym_frame_2.png" id="8_82xsv"]
+[ext_resource type="Texture2D" uid="uid://d26h1y776eiw1" path="res://67_-_frame_2.png" id="8_w48qg"]
+[ext_resource type="Texture2D" uid="uid://dcmjc0oytxu7l" path="res://maewing_fram_2.png" id="8_yaehf"]
+[ext_resource type="Texture2D" uid="uid://dut33lqrnpodg" path="res://67_-_idle.png" id="8_ycdy4"]
+[ext_resource type="Texture2D" uid="uid://bpaohgc83fa34" path="res://maewing_fram_3.png" id="9_074og"]
+[ext_resource type="Texture2D" uid="uid://cnadyiu7w05k2" path="res://gym_frame_3.png" id="9_getpj"]
+[ext_resource type="Texture2D" uid="uid://bxfbqjpfiqc23" path="res://maewing_fram_4.png" id="10_cegan"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
+size = Vector2(613, 726)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1bvp3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_ycdy4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_w48qg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_dg77c")
+}],
+"loop": false,
+"name": &"67",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_cegan")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_82xsv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_getpj")
+}],
+"loop": false,
+"name": &"Academia",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_2cqfq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_yaehf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_074og")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_cegan")
+}],
+"loop": false,
+"name": &"Mewing",
+"speed": 5.0
+}]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ycdy4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w48qg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vivmo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2cqfq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yaehf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_074og"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cegan"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_82xsv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_getpj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ryguw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d13ii"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1u8w0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kek77"]
+shader = ExtResource("8_5vw27")
+shader_parameter/blur_amount = 3.0
+shader_parameter/tint_color = Color(0, 0, 0, 0.5)
+
+[node name="Main" type="Control" unique_id=437389792]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_h2yge")
+
+[node name="HomeScreen" type="Control" parent="." unique_id=35290859]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Background" type="TextureRect" parent="HomeScreen" unique_id=2076052930]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -225.26318
+offset_bottom = -381.0526
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.425, 1.425)
+mouse_filter = 2
+texture = ExtResource("2_kek77")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="HomeScreen" unique_id=1434893364]
+visibility_layer = 16
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 193.0
+grow_horizontal = 2
+theme_override_constants/margin_top = 120
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HomeScreen/MarginContainer" unique_id=779781588]
+layout_mode = 2
+alignment = 1
+
+[node name="LabelAura" type="Label" parent="HomeScreen/MarginContainer/VBoxContainer" unique_id=534250661]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_font_sizes/font_size = 50
+text = "0 Aura
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LabelRenda" type="Label" parent="HomeScreen/MarginContainer/VBoxContainer" unique_id=1517979242]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "0/s"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="HomeScreen/MarginContainer/VBoxContainer" unique_id=503868369]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.9490196, 0.9490196, 1)
+theme_override_colors/font_outline_color = Color(1, 0, 0, 1)
+
+[node name="ItemLabel" type="Label" parent="HomeScreen/MarginContainer/VBoxContainer" unique_id=485167265]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
+[node name="CharacterPosition" type="Control" parent="HomeScreen" unique_id=1338200620]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_top = -480.0
+offset_bottom = -480.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Character" type="Area2D" parent="HomeScreen/CharacterPosition" unique_id=1297035889]
+position = Vector2(0, -30)
+script = ExtResource("3_1bvp3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HomeScreen/CharacterPosition/Character" unique_id=1328652810]
+position = Vector2(-10.5, 147)
+shape = SubResource("RectangleShape2D_lquwl")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="HomeScreen/CharacterPosition/Character" unique_id=1936118119]
+position = Vector2(-8.999999, 143.99998)
+scale = Vector2(0.7984375, 0.7984375)
+sprite_frames = SubResource("SpriteFrames_1bvp3")
+animation = &"67"
+frame = 2
+frame_progress = 1.0
+
+[node name="SideButtons" type="PanelContainer" parent="HomeScreen" unique_id=391757765]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 0
+offset_left = 660.0
+offset_top = 511.0
+offset_right = 760.0
+offset_bottom = 832.0
+size_flags_horizontal = 8
+size_flags_vertical = 6
+size_flags_stretch_ratio = 19.95
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ycdy4")
+
+[node name="HBoxContainer" type="VBoxContainer" parent="HomeScreen/SideButtons" unique_id=1199279348]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+
+[node name="UpgradesTab" type="Button" parent="HomeScreen/SideButtons/HBoxContainer" unique_id=1442749693]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/icon_max_width = 100
+theme_override_styles/normal = SubResource("StyleBoxEmpty_w48qg")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_vivmo")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_2cqfq")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_yaehf")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_074og")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_cegan")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_82xsv")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_getpj")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ryguw")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_d13ii")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_1u8w0")
+icon = ExtResource("3_dg77c")
+
+[node name="HomeTab" type="Button" parent="HomeScreen/SideButtons/HBoxContainer" unique_id=1656827468]
+layout_mode = 2
+size_flags_vertical = 4
+size_flags_stretch_ratio = 5.1
+theme_override_constants/icon_max_width = 100
+theme_override_styles/normal = SubResource("StyleBoxEmpty_w48qg")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_vivmo")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_2cqfq")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_yaehf")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_074og")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_cegan")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_82xsv")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_getpj")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ryguw")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_d13ii")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_1u8w0")
+icon = ExtResource("2_efxa6")
+
+[node name="FavoritesTab" type="Button" parent="HomeScreen/SideButtons/HBoxContainer" unique_id=1709431549]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/icon_max_width = 100
+theme_override_styles/normal = SubResource("StyleBoxEmpty_w48qg")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_vivmo")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_2cqfq")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_yaehf")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_074og")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_cegan")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_82xsv")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_getpj")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ryguw")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_d13ii")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_1u8w0")
+icon = ExtResource("4_dg77c")
+
+[node name="UpgradesScreen" type="Control" parent="." unique_id=456079612]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("7_4c57u")
+
+[node name="Background2" type="TextureRect" parent="UpgradesScreen" unique_id=1865679728]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -226.66669
+offset_bottom = -381.7544
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.425, 1.425)
+mouse_filter = 2
+texture = ExtResource("8_4c57u")
+expand_mode = 1
+
+[node name="Overlay" type="ColorRect" parent="UpgradesScreen" unique_id=265580983]
+material = SubResource("ShaderMaterial_kek77")
+custom_minimum_size = Vector2(760, 1280)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.34117648)
+
+[node name="MarginContainer" type="MarginContainer" parent="UpgradesScreen" unique_id=1516000656]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 1215.0
+grow_horizontal = 2
+theme_override_constants/margin_top = 120
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UpgradesScreen/MarginContainer" unique_id=832056536]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UpgradesScreen/MarginContainer/ScrollContainer" unique_id=390492785]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BackBtn" type="Button" parent="UpgradesScreen" unique_id=1773467394]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -105.0
+offset_right = 121.0
+grow_vertical = 0
+text = "Voltar
+"
+
+[node name="PauseMenu" type="Control" parent="." unique_id=1267685652]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Overlay" type="ColorRect" parent="PauseMenu" unique_id=1988028521]
+layout_mode = 0
+offset_right = 760.0
+offset_bottom = 1280.0
+color = Color(0, 0, 0, 0.6156863)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu" unique_id=1532774932]
+layout_mode = 0
+offset_left = 160.0
+offset_top = 500.0
+offset_right = 615.0
+offset_bottom = 800.0
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="ResumeBtn" type="Button" parent="PauseMenu/VBoxContainer" unique_id=523214441]
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+text = "Resume"
+
+[node name="SaveBtn" type="Button" parent="PauseMenu/VBoxContainer" unique_id=1196442592]
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+text = "Save"
+
+[node name="MenuBtn" type="Button" parent="PauseMenu/VBoxContainer" unique_id=650558477]
+custom_minimum_size = Vector2(300, 60)
+layout_mode = 2
+text = "Return to Menu"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2122503761]
