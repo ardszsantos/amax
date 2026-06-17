@@ -1,24 +1,24 @@
 [gd_scene format=3 uid="uid://cuo6mnqlyjei2"]
 
-[ext_resource type="Script" uid="uid://b6fpoxyrk65wn" path="res://main.gd" id="1_h2yge"]
-[ext_resource type="Texture2D" uid="uid://ckoyxrdmeutv0" path="res://comments-aura.png" id="2_efxa6"]
-[ext_resource type="Texture2D" uid="uid://beh5c35s17kcq" path="res://background1.jpeg" id="2_kek77"]
-[ext_resource type="Script" uid="uid://bvqmaqrktg2s5" path="res://personagem.gd" id="3_1bvp3"]
-[ext_resource type="Texture2D" uid="uid://bqepodg4inb1t" path="res://heart-aura.png" id="3_dg77c"]
-[ext_resource type="Texture2D" uid="uid://ce5lpu4par7tm" path="res://favorites-aura.png" id="4_dg77c"]
-[ext_resource type="Texture2D" uid="uid://ceqydrs7ls87c" path="res://maewing_fram_1.png" id="7_2cqfq"]
-[ext_resource type="Script" uid="uid://evgml6nth8id" path="res://upgrades_screen.gd" id="7_4c57u"]
-[ext_resource type="Texture2D" uid="uid://debblm5b4g8ob" path="res://gym_frame_1.png" id="7_cegan"]
-[ext_resource type="Texture2D" uid="uid://cheug4deiggp2" path="res://67_-_frame_1.png" id="7_dg77c"]
-[ext_resource type="Texture2D" uid="uid://bdra7eh2drlb2" path="res://background2.jpeg" id="8_4c57u"]
-[ext_resource type="Shader" uid="uid://ks2p71s362l6" path="res://main.gdshader" id="8_5vw27"]
-[ext_resource type="Texture2D" uid="uid://nfvdvan3817d" path="res://gym_frame_2.png" id="8_82xsv"]
-[ext_resource type="Texture2D" uid="uid://d26h1y776eiw1" path="res://67_-_frame_2.png" id="8_w48qg"]
-[ext_resource type="Texture2D" uid="uid://dcmjc0oytxu7l" path="res://maewing_fram_2.png" id="8_yaehf"]
-[ext_resource type="Texture2D" uid="uid://dut33lqrnpodg" path="res://67_-_idle.png" id="8_ycdy4"]
-[ext_resource type="Texture2D" uid="uid://bpaohgc83fa34" path="res://maewing_fram_3.png" id="9_074og"]
-[ext_resource type="Texture2D" uid="uid://cnadyiu7w05k2" path="res://gym_frame_3.png" id="9_getpj"]
-[ext_resource type="Texture2D" uid="uid://bxfbqjpfiqc23" path="res://maewing_fram_4.png" id="10_cegan"]
+[ext_resource type="Script" uid="uid://b6fpoxyrk65wn" path="res://scripts/main.gd" id="1_0ld40"]
+[ext_resource type="Texture2D" uid="uid://beh5c35s17kcq" path="res://assets/backgrounds/background1.jpeg" id="2_gqmmt"]
+[ext_resource type="Script" uid="uid://bvqmaqrktg2s5" path="res://scripts/personagem.gd" id="3_yc10j"]
+[ext_resource type="Texture2D" uid="uid://dut33lqrnpodg" path="res://assets/sprites/67_-_idle.png" id="4_jscy8"]
+[ext_resource type="Texture2D" uid="uid://d26h1y776eiw1" path="res://assets/sprites/67_-_frame_2.png" id="5_pm3ni"]
+[ext_resource type="Texture2D" uid="uid://cheug4deiggp2" path="res://assets/sprites/67_-_frame_1.png" id="6_y6deb"]
+[ext_resource type="Texture2D" uid="uid://debblm5b4g8ob" path="res://assets/sprites/gym_frame_1.png" id="7_og1vs"]
+[ext_resource type="Texture2D" uid="uid://nfvdvan3817d" path="res://assets/sprites/gym_frame_2.png" id="8_2wyq8"]
+[ext_resource type="Texture2D" uid="uid://cnadyiu7w05k2" path="res://assets/sprites/gym_frame_3.png" id="9_vxglm"]
+[ext_resource type="Texture2D" uid="uid://ceqydrs7ls87c" path="res://assets/sprites/maewing_fram_1.png" id="10_2f3dj"]
+[ext_resource type="Texture2D" uid="uid://dcmjc0oytxu7l" path="res://assets/sprites/maewing_fram_2.png" id="11_yq6so"]
+[ext_resource type="Texture2D" uid="uid://bpaohgc83fa34" path="res://assets/sprites/maewing_fram_3.png" id="12_fv21b"]
+[ext_resource type="Texture2D" uid="uid://bxfbqjpfiqc23" path="res://assets/sprites/maewing_fram_4.png" id="13_tel4y"]
+[ext_resource type="Texture2D" uid="uid://bqepodg4inb1t" path="res://assets/ui/heart-aura.png" id="14_qkpxi"]
+[ext_resource type="Texture2D" uid="uid://ckoyxrdmeutv0" path="res://assets/ui/comments-aura.png" id="15_5q0nq"]
+[ext_resource type="Texture2D" uid="uid://ce5lpu4par7tm" path="res://assets/ui/favorites-aura.png" id="16_dgi5k"]
+[ext_resource type="Script" uid="uid://evgml6nth8id" path="res://scripts/upgrades_screen.gd" id="17_j8jky"]
+[ext_resource type="Texture2D" uid="uid://bdra7eh2drlb2" path="res://assets/backgrounds/background2.jpeg" id="18_kmb1v"]
+[ext_resource type="Shader" uid="uid://ks2p71s362l6" path="res://shaders/main.gdshader" id="19_fuf3a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
 size = Vector2(613, 726)
@@ -27,13 +27,13 @@ size = Vector2(613, 726)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("8_ycdy4")
+"texture": ExtResource("4_jscy8")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_w48qg")
+"texture": ExtResource("5_pm3ni")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_dg77c")
+"texture": ExtResource("6_y6deb")
 }],
 "loop": false,
 "name": &"67",
@@ -41,13 +41,13 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("7_cegan")
+"texture": ExtResource("7_og1vs")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_82xsv")
+"texture": ExtResource("8_2wyq8")
 }, {
 "duration": 1.0,
-"texture": ExtResource("9_getpj")
+"texture": ExtResource("9_vxglm")
 }],
 "loop": false,
 "name": &"Academia",
@@ -55,16 +55,16 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("7_2cqfq")
+"texture": ExtResource("10_2f3dj")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_yaehf")
+"texture": ExtResource("11_yq6so")
 }, {
 "duration": 1.0,
-"texture": ExtResource("9_074og")
+"texture": ExtResource("12_fv21b")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_cegan")
+"texture": ExtResource("13_tel4y")
 }],
 "loop": false,
 "name": &"Mewing",
@@ -96,7 +96,7 @@ animations = [{
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1u8w0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kek77"]
-shader = ExtResource("8_5vw27")
+shader = ExtResource("19_fuf3a")
 shader_parameter/blur_amount = 3.0
 shader_parameter/tint_color = Color(0, 0, 0, 0.5)
 
@@ -108,7 +108,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("1_h2yge")
+script = ExtResource("1_0ld40")
 
 [node name="HomeScreen" type="Control" parent="." unique_id=35290859]
 layout_mode = 1
@@ -130,7 +130,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.425, 1.425)
 mouse_filter = 2
-texture = ExtResource("2_kek77")
+texture = ExtResource("2_gqmmt")
 expand_mode = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="HomeScreen" unique_id=1434893364]
@@ -187,7 +187,7 @@ grow_vertical = 0
 
 [node name="Character" type="Area2D" parent="HomeScreen/CharacterPosition" unique_id=1297035889]
 position = Vector2(0, -30)
-script = ExtResource("3_1bvp3")
+script = ExtResource("3_yc10j")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HomeScreen/CharacterPosition/Character" unique_id=1328652810]
 position = Vector2(-10.5, 147)
@@ -234,7 +234,7 @@ theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_getpj"
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_ryguw")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_d13ii")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_1u8w0")
-icon = ExtResource("3_dg77c")
+icon = ExtResource("14_qkpxi")
 
 [node name="HomeTab" type="Button" parent="HomeScreen/SideButtons/HBoxContainer" unique_id=1656827468]
 layout_mode = 2
@@ -252,7 +252,7 @@ theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_getpj"
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_ryguw")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_d13ii")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_1u8w0")
-icon = ExtResource("2_efxa6")
+icon = ExtResource("15_5q0nq")
 
 [node name="FavoritesTab" type="Button" parent="HomeScreen/SideButtons/HBoxContainer" unique_id=1709431549]
 layout_mode = 2
@@ -269,7 +269,7 @@ theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_getpj"
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_ryguw")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_d13ii")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_1u8w0")
-icon = ExtResource("4_dg77c")
+icon = ExtResource("16_dgi5k")
 
 [node name="UpgradesScreen" type="Control" parent="." unique_id=456079612]
 visible = false
@@ -280,7 +280,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("7_4c57u")
+script = ExtResource("17_j8jky")
 
 [node name="Background2" type="TextureRect" parent="UpgradesScreen" unique_id=1865679728]
 layout_mode = 1
@@ -293,7 +293,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.425, 1.425)
 mouse_filter = 2
-texture = ExtResource("8_4c57u")
+texture = ExtResource("18_kmb1v")
 expand_mode = 1
 
 [node name="Overlay" type="ColorRect" parent="UpgradesScreen" unique_id=265580983]
