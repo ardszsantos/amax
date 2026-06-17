@@ -1,6 +1,6 @@
 extends Area2D
 
-var floating_text_scene = preload("res://floating_text.tscn")
+var floating_text_scene = preload("res://scenes/floating_text.tscn")
 var click_timer: float = 0.0
 
 # >>> EDITÁVEL: tempo (em segundos) que o personagem fica na animação de clique

@@ -168,7 +168,7 @@ func _on_save():
 
 func _on_return_menu():
 	SaveManager.save_game(self)
-	get_tree().change_scene_to_file("res://menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/menu.tscn")
 
 func _process(delta):
 	idle_timer += delta
