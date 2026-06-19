@@ -15,6 +15,10 @@ run/main_scene="uid://djpvv7s5gjmv1"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+ButtonJuice="*res://scripts/button_juice.gd"
+
 [display]
 
 window/size/viewport_width=760

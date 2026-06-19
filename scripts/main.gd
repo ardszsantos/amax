@@ -4,16 +4,19 @@ var aura: float = 0.0
 var aura_per_second: float = 0.0
 var items: Array = []
 var current_item_index: int = 0
-var current_clicks: int = 0
-var idle_timer: float = 0.0
+var current_clicks: float = 0.0
 var save_timer: float = 0.0
 
-# >>> EDITÁVEL: segundos parado (sem clicar) até voltar pro primeiro item.
-const IDLE_TIMEOUT: float = 60.0
+# >>> EDITÁVEL: quanto de progresso (em "cliques") a barra perde por segundo.
+# A drenagem é CONSTANTE — acontece sempre, até enquanto o jogador clica.
+# É uma força puxando a barra pra baixo; pra avançar, os cliques têm que
+# vencer essa força. Maior = mais difícil avançar.
+const DRAIN_PER_SECOND: float = 1.5
 # >>> EDITÁVEL: de quantos em quantos segundos o jogo salva sozinho.
 const SAVE_INTERVAL: float = 5.0
 
 @onready var home_screen = $HomeScreen
+@onready var items_screen = $ItemsScreen
 @onready var upgrades_screen = $UpgradesScreen
 @onready var pause_menu = $PauseMenu
 
@@ -24,7 +27,9 @@ const SAVE_INTERVAL: float = 5.0
 
 @onready var upgrades_tab = $HomeScreen/SideButtons/HBoxContainer/UpgradesTab
 @onready var favorites_tab = $HomeScreen/SideButtons/HBoxContainer/FavoritesTab
-@onready var back_btn = $UpgradesScreen/BackBtn
+@onready var home_tab = $HomeScreen/SideButtons/HBoxContainer/HomeTab
+@onready var back_btn = $ItemsScreen/BackBtn
+@onready var upgrades_back_btn = $UpgradesScreen/BackBtn
 
 @onready var resume_btn = $PauseMenu/VBoxContainer/ResumeBtn
 @onready var save_btn = $PauseMenu/VBoxContainer/SaveBtn
@@ -43,13 +48,20 @@ func _ready():
 	#     - CLIQUES_PRA_AVANCAR: quantos cliques pra passar pro próximo item.
 	# ============================================================
 	items = [
-		Item.new("67", 1.0, 0.1, 20),
-		Item.new("Mewing", 5.0, 0.5, 20),
+		Item.new("67", 1.0, 0.1, 20, preload("res://assets/ui/cr7.jpg")),
+		Item.new("Mewing", 5.0, 0.5, 20, preload("res://assets/ui/mewing.png")),
 		Item.new("Academia", 25.0, 2.5, 20),
 		Item.new("Gloving", 125.0, 12.5, 20),
 		Item.new("Hype Beast", 625.0, 62.5, 20),
 	]
 	items[0].unlocked = true
+
+	# >>> EDITÁVEL: descrição que aparece no popup do "?" (estilo meme, edita à vontade).
+	items[0].description = "durante seu treino você finalmente entendeu, o 67 é a verdade absoluta"
+	items[1].description = "língua no céu da boca. o maxilar agradece."
+	items[2].description = "sem dor, sem aura. simples assim."
+	items[3].description = "bota a luva. o resto acontece."
+	items[4].description = "se é caro, é aura."
 
 	# ============================================================
 	# >>> EDITÁVEL: UPGRADES DE CADA ITEM
@@ -78,9 +90,11 @@ func _ready():
 	SaveManager.load_game(self)
 	recalculate_passive()
 
-	upgrades_tab.pressed.connect(func(): switch_screen(upgrades_screen))
+	upgrades_tab.pressed.connect(func(): switch_screen(items_screen))
 	favorites_tab.pressed.connect(_toggle_pause)
+	home_tab.pressed.connect(func(): switch_screen(upgrades_screen))
 	back_btn.pressed.connect(func(): switch_screen(home_screen))
+	upgrades_back_btn.pressed.connect(func(): switch_screen(home_screen))
 
 	pause_menu.visible = false
 	resume_btn.pressed.connect(_toggle_pause)
@@ -89,7 +103,7 @@ func _ready():
 
 	update_hud()
 	switch_screen(home_screen)
-	upgrades_screen.build_list()
+	items_screen.build_list()
 
 func get_current_item() -> Item:
 	return items[current_item_index]
@@ -98,7 +112,6 @@ func on_click():
 	var item = get_current_item()
 	aura += item.get_aura_per_click()
 	current_clicks += 1
-	idle_timer = 0.0
 
 	if can_advance() and current_clicks >= item.clicks_to_advance:
 		advance_item()
@@ -123,6 +136,15 @@ func reset_to_first():
 	update_hud()
 	if old_index != 0:
 		item_changed.emit(current_item_index)
+
+# Drena a barra CONSTANTEMENTE (roda todo frame, até enquanto o jogador
+# clica). É uma força puxando o progresso pra baixo: os cliques precisam
+# vencer ela pra avançar. Esvazia até 0 e para ali.
+func _drain(delta: float):
+	if current_clicks <= 0.0:
+		return
+	current_clicks = max(0.0, current_clicks - DRAIN_PER_SECOND * delta)
+	update_hud()
 
 func recalculate_passive():
 	aura_per_second = 0.0
@@ -152,6 +174,7 @@ func on_item_unlocked():
 
 func switch_screen(screen: Control):
 	home_screen.visible = false
+	items_screen.visible = false
 	upgrades_screen.visible = false
 	screen.visible = true
 
@@ -171,10 +194,7 @@ func _on_return_menu():
 	get_tree().change_scene_to_file("res://scenes/menu.tscn")
 
 func _process(delta):
-	idle_timer += delta
-	if idle_timer >= IDLE_TIMEOUT:
-		idle_timer = 0.0
-		reset_to_first()
+	_drain(delta)
 
 	save_timer += delta
 	if save_timer >= SAVE_INTERVAL:

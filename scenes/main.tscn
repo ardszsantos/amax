@@ -17,8 +17,8 @@
 [ext_resource type="Texture2D" uid="uid://ckoyxrdmeutv0" path="res://assets/ui/comments-aura.png" id="15_5q0nq"]
 [ext_resource type="Texture2D" uid="uid://ce5lpu4par7tm" path="res://assets/ui/favorites-aura.png" id="16_dgi5k"]
 [ext_resource type="Script" uid="uid://evgml6nth8id" path="res://scripts/upgrades_screen.gd" id="17_j8jky"]
-[ext_resource type="Texture2D" uid="uid://bdra7eh2drlb2" path="res://assets/backgrounds/background2.jpeg" id="18_kmb1v"]
-[ext_resource type="Shader" uid="uid://ks2p71s362l6" path="res://shaders/main.gdshader" id="19_fuf3a"]
+[ext_resource type="Texture2D" uid="uid://hi7ifl7c1oef" path="res://assets/ui/back-button.png" id="18_dp3eg"]
+[ext_resource type="Script" uid="uid://2tmtij1bw7yd" path="res://scripts/upgrades_list.gd" id="19_0ld40"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
 size = Vector2(613, 726)
@@ -95,10 +95,23 @@ animations = [{
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1u8w0"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_kek77"]
-shader = ExtResource("19_fuf3a")
-shader_parameter/blur_amount = 3.0
-shader_parameter/tint_color = Color(0, 0, 0, 0.5)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dp3eg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0ld40"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gqmmt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yc10j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jscy8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ld40"]
+bg_color = Color(0.13682574, 0.13682574, 0.13682568, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 
 [node name="Main" type="Control" unique_id=437389792]
 layout_mode = 3
@@ -111,6 +124,7 @@ mouse_filter = 2
 script = ExtResource("1_0ld40")
 
 [node name="HomeScreen" type="Control" parent="." unique_id=35290859]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -271,8 +285,7 @@ theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_d13ii")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_1u8w0")
 icon = ExtResource("16_dgi5k")
 
-[node name="UpgradesScreen" type="Control" parent="." unique_id=456079612]
-visible = false
+[node name="ItemsScreen" type="Control" parent="." unique_id=456079612]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -282,58 +295,98 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("17_j8jky")
 
-[node name="Background2" type="TextureRect" parent="UpgradesScreen" unique_id=1865679728]
+[node name="ScrollContainer" type="ScrollContainer" parent="ItemsScreen" unique_id=1259776701]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -226.66669
-offset_bottom = -381.7544
+offset_right = 10.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.425, 1.425)
-mouse_filter = 2
-texture = ExtResource("18_kmb1v")
-expand_mode = 1
+scale = Vector2(0.9900664, 0.9903449)
+horizontal_scroll_mode = 0
 
-[node name="Overlay" type="ColorRect" parent="UpgradesScreen" unique_id=265580983]
-material = SubResource("ShaderMaterial_kek77")
-custom_minimum_size = Vector2(760, 1280)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0, 0, 0, 0.34117648)
-
-[node name="MarginContainer" type="MarginContainer" parent="UpgradesScreen" unique_id=1516000656]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 1215.0
-grow_horizontal = 2
-theme_override_constants/margin_top = 120
-
-[node name="ScrollContainer" type="ScrollContainer" parent="UpgradesScreen/MarginContainer" unique_id=832056536]
+[node name="ItemList" type="VBoxContainer" parent="ItemsScreen/ScrollContainer" unique_id=1337218806]
+unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UpgradesScreen/MarginContainer/ScrollContainer" unique_id=390492785]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="BackBtn" type="Button" parent="UpgradesScreen" unique_id=1773467394]
+[node name="BackBtn" type="Button" parent="ItemsScreen" unique_id=1773467394]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -105.0
-offset_right = 121.0
+offset_top = -88.0
+offset_right = 88.0
 grow_vertical = 0
-text = "Voltar
-"
+theme_override_constants/icon_max_width = 80
+theme_override_styles/normal = SubResource("StyleBoxEmpty_dp3eg")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_0ld40")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_gqmmt")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_yc10j")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jscy8")
+icon = ExtResource("18_dp3eg")
+
+[node name="InfoPopup" type="Control" parent="ItemsScreen" unique_id=441490183]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="InfoBackdrop" type="ColorRect" parent="ItemsScreen/InfoPopup" unique_id=1115862702]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Box" type="PanelContainer" parent="ItemsScreen/InfoPopup" unique_id=2011261968]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -25.0
+offset_right = 20.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0ld40")
+
+[node name="MarginContainer" type="MarginContainer" parent="ItemsScreen/InfoPopup/Box" unique_id=1838303675]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ItemsScreen/InfoPopup/Box/MarginContainer" unique_id=2146709663]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PopupTitle" type="Label" parent="ItemsScreen/InfoPopup/Box/MarginContainer/VBoxContainer" unique_id=557861719]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0.09019608, 1)
+theme_override_font_sizes/font_size = 28
+text = "placeholder"
+horizontal_alignment = 1
+
+[node name="PopupDesc" type="Label" parent="ItemsScreen/InfoPopup/Box/MarginContainer/VBoxContainer" unique_id=264937621]
+unique_name_in_owner = true
+layout_mode = 2
+text = "placeholder"
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="PauseMenu" type="Control" parent="." unique_id=1267685652]
 visible = false
@@ -375,3 +428,43 @@ layout_mode = 2
 text = "Return to Menu"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2122503761]
+
+[node name="UpgradesScreen" type="Control" parent="." unique_id=397341043]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("19_0ld40")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UpgradesScreen" unique_id=1681736838]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="UpgradeList" type="VBoxContainer" parent="UpgradesScreen/ScrollContainer" unique_id=849778369]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BackBtn" type="Button" parent="UpgradesScreen" unique_id=1297011714]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -88.0
+offset_right = 88.0
+grow_vertical = 0
+theme_override_constants/icon_max_width = 80
+theme_override_styles/normal = SubResource("StyleBoxEmpty_dp3eg")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_0ld40")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_gqmmt")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_yc10j")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jscy8")
+icon = ExtResource("18_dp3eg")

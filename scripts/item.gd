@@ -4,6 +4,9 @@ var item_name: String
 var aura_per_click: float
 var base_passive: float
 
+# >>> EDITÁVEL: texto que aparece no popup do "?" na tela de itens.
+var description: String = ""
+
 # >>> EDITÁVEL: cliques pra avançar caso um item seja criado sem esse valor.
 # (Na prática isso já é definido na lista de itens do Main.gd.)
 var clicks_to_advance: int = 200

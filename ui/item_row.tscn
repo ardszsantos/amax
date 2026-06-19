@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://ck3mapeflb4o7"]
+
+[ext_resource type="Script" uid="uid://cvgtu1udk21us" path="res://ui/item_row.gd" id="1_itemrow"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8byuw"]
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_418jv"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+
+[node name="ItemRow_tsc" type="PanelContainer" unique_id=893831256]
+custom_minimum_size = Vector2(0, 140)
+offset_right = 760.0
+offset_bottom = 152.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_8byuw")
+script = ExtResource("1_itemrow")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1967862679]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=374360569]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=587310168]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_418jv")
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelContainer" unique_id=595743170]
+clip_contents = true
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 6
+
+[node name="InfoBox" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=331236475]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Title" type="Label" parent="MarginContainer/HBoxContainer/InfoBox" unique_id=855799441]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "titulo"
+autowrap_mode = 2
+
+[node name="Cost" type="Label" parent="MarginContainer/HBoxContainer/InfoBox" unique_id=627253933]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0.3372549, 1)
+text = "custo"
+
+[node name="InfoButton" type="Button" parent="MarginContainer/HBoxContainer" unique_id=1401438666]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+text = "?"
