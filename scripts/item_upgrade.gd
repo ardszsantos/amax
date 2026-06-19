@@ -26,8 +26,6 @@ func buy(main) -> bool:
 		main.aura -= cost
 		level += 1
 		# NÃO MEXER (fórmula): a cada nível o preço sobe.
-		# O 1.5 é o quanto encarece por nível (1.5 = +50% por nível).
-		# >>> Se quiser deixar o jogo mais caro/barato, mude SÓ o número 1.5.
-		cost = int(base_cost * pow(1.5, level))
+		cost = int(base_cost * pow(1.3, level))
 		return true
 	return false

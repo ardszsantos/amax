@@ -48,7 +48,7 @@ func _ready():
 	#     - CLIQUES_PRA_AVANCAR: quantos cliques pra passar pro próximo item.
 	# ============================================================
 	items = [
-		Item.new("67", 1.0, 0.1, 20, preload("res://assets/ui/cr7.jpg")),
+		Item.new("67", 0.143, 1, 20, preload("res://assets/ui/cr7.jpg")),
 		Item.new("Mewing", 5.0, 0.5, 20, preload("res://assets/ui/mewing.png")),
 		Item.new("Academia", 25.0, 2.5, 20),
 		Item.new("Gloving", 125.0, 12.5, 20),
@@ -72,8 +72,8 @@ func _ready():
 	#     - BONUS: quanto cada nível soma.
 	#     - TIPO: "click" soma na aura por clique | "passive" soma no ganho por segundo.
 	# ============================================================
-	items[0].add_upgrade(ItemUpgrade.new("Click Boost", 10, 0.5, "click"))
-	items[0].add_upgrade(ItemUpgrade.new("Passive Gain", 15, 0.05, "passive"))
+	items[0].add_upgrade(ItemUpgrade.new("Click Boost", 10, 0.143, "click"))
+	items[0].add_upgrade(ItemUpgrade.new("Passive Gain", 15, 1, "passive"))
 
 	items[1].add_upgrade(ItemUpgrade.new("Click Boost", 50, 2.0, "click"))
 	items[1].add_upgrade(ItemUpgrade.new("Passive Gain", 75, 0.25, "passive"))
