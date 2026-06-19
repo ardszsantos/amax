@@ -76,7 +76,7 @@ func _ready():
 	items[0].add_upgrade(ItemUpgrade.new("Passive Gain", 15, 1, "passive"))
 
 	items[1].add_upgrade(ItemUpgrade.new("Click Boost", 50, 2.0, "click"))
-	items[1].add_upgrade(ItemUpgrade.new("Passive Gain", 75, 0.25, "passive"))
+	items[1].add_upgrade(ItemUpgrade.new("Passive Gain", 75, 10, "passive"))
 
 	items[2].add_upgrade(ItemUpgrade.new("Click Boost", 200, 10.0, "click"))
 	items[2].add_upgrade(ItemUpgrade.new("Passive Gain", 300, 1.0, "passive"))
