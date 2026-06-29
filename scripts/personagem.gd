@@ -42,6 +42,11 @@ func _on_input_event(_viewport, event, _shape_idx):
 		ft.global_position = get_global_mouse_position()
 		main.add_child(ft)
 
+		# HypeBeast tem animação automática (play/loop), então o clique só conta
+		# a aura — não avançamos frames manualmente pra não brigar com ela.
+		if item.item_name == "HypeBeast":
+			return
+
 		is_clicking = true
 		click_timer = 0.0
 
@@ -74,6 +79,12 @@ func update_sprite_state():
 	if sprite.sprite_frames.has_animation(anim):
 		sprite.animation = anim
 		sprite.frame = 0
+		# HypeBeast cicla sozinho entre os 3 frames; os demais itens só avançam
+		# frame no clique, então ficam parados (stop) esperando o input.
+		if anim == "HypeBeast":
+			sprite.play()
+		else:
+			sprite.stop()
 
 func _on_item_changed(_new_index: int):
 	# Interrompe qualquer transição anterior e remove sprites duplicados que

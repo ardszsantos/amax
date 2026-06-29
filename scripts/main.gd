@@ -62,7 +62,7 @@ func _ready():
 		Item.new("Mewing", 1, 7, 20, preload("res://assets/ui/mewing.png")),
 		Item.new("Academia", 7.142, 50, 20, preload("res://assets/ui/gym_icone.png")),
 		Item.new("Gloving", 49.994, 350, 20, preload("res://assets/ui/gloving.jpg")),
-		Item.new("Hype Beast", 349.985, 2450, 20, preload("res://assets/ui/hyper_beast_icone.png")),
+		Item.new("HypeBeast", 349.985, 2450, 20, preload("res://assets/ui/hyper_beast_icone.png")),
 	]
 	items[0].unlocked = true
 
