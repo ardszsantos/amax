@@ -49,10 +49,10 @@ func _ready():
 	# ============================================================
 	items = [
 		Item.new("67", 0.143, 1, 20, preload("res://assets/ui/cr7.jpg")),
-		Item.new("Mewing", 5.0, 0.5, 20, preload("res://assets/ui/mewing.png")),
-		Item.new("Academia", 25.0, 2.5, 20),
-		Item.new("Gloving", 125.0, 12.5, 20),
-		Item.new("Hype Beast", 625.0, 62.5, 20),
+		Item.new("Mewing", 1, 7, 20, preload("res://assets/ui/mewing.png")),
+		Item.new("Academia",7.142, 50, 20),
+		Item.new("Gloving",49.994 , 350, 20),
+		Item.new("Hype Beast", 349.985,2450, 20),
 	]
 	items[0].unlocked = true
 
@@ -75,17 +75,17 @@ func _ready():
 	items[0].add_upgrade(ItemUpgrade.new("Click Boost", 10, 0.143, "click"))
 	items[0].add_upgrade(ItemUpgrade.new("Passive Gain", 15, 1, "passive"))
 
-	items[1].add_upgrade(ItemUpgrade.new("Click Boost", 50, 2.0, "click"))
-	items[1].add_upgrade(ItemUpgrade.new("Passive Gain", 75, 10, "passive"))
+	items[1].add_upgrade(ItemUpgrade.new("Click Boost", 200, 1, "click"))
+	items[1].add_upgrade(ItemUpgrade.new("Passive Gain", 300, 7, "passive"))
 
-	items[2].add_upgrade(ItemUpgrade.new("Click Boost", 200, 10.0, "click"))
-	items[2].add_upgrade(ItemUpgrade.new("Passive Gain", 300, 1.0, "passive"))
+	items[2].add_upgrade(ItemUpgrade.new("Click Boost", 4000, 10.0, "click"))
+	items[2].add_upgrade(ItemUpgrade.new("Passive Gain", 6000, 70, "passive"))
 
-	items[3].add_upgrade(ItemUpgrade.new("Click Boost", 1000, 50.0, "click"))
-	items[3].add_upgrade(ItemUpgrade.new("Passive Gain", 1500, 5.0, "passive"))
+	items[3].add_upgrade(ItemUpgrade.new("Click Boost", 80000, 110, "click"))
+	items[3].add_upgrade(ItemUpgrade.new("Passive Gain", 120000, 770, "passive"))
 
-	items[4].add_upgrade(ItemUpgrade.new("Click Boost", 5000, 250.0, "click"))
-	items[4].add_upgrade(ItemUpgrade.new("Passive Gain", 7500, 25.0, "passive"))
+	items[4].add_upgrade(ItemUpgrade.new("Click Boost", 1600000, 1110, "click"))
+	items[4].add_upgrade(ItemUpgrade.new("Passive Gain",2400000 , 7700, "passive"))
 
 	SaveManager.load_game(self)
 	recalculate_passive()

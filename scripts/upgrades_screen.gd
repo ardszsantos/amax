@@ -51,7 +51,7 @@ func build_list() -> void:
 # base * 5^index -> cada item custa 5x o anterior.
 func get_item_cost(index: int) -> int:
 	var base = 50
-	return int(base * pow(5, index))
+	return int(base * pow(10, index))
 
 func _on_buy_pressed(index: int, row) -> void:
 	var main = get_node("/root/Main")

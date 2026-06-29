@@ -26,6 +26,6 @@ func buy(main) -> bool:
 		main.aura -= cost
 		level += 1
 		# NÃO MEXER (fórmula): a cada nível o preço sobe.
-		cost = int(base_cost * pow(1.3, level))
+		cost = int(base_cost * pow(1.20, level))
 		return true
 	return false
