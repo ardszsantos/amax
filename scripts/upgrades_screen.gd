@@ -48,10 +48,10 @@ func build_list() -> void:
 		row.setup_placeholder()
 
 # >>> EDITÁVEL: custo pra desbloquear o item de índice `index`.
-# base * 5^index -> cada item custa 5x o anterior.
+# base * 10^index -> cada item custa 10x o anterior.
 func get_item_cost(index: int) -> int:
 	var base = 50
-	return int(base * pow(5, index))
+	return int(base * pow(10, index))
 
 func _on_buy_pressed(index: int, row) -> void:
 	var main = get_node("/root/Main")

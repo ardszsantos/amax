@@ -26,18 +26,16 @@ func _init(p_name: String, p_aura: float, p_passive: float, p_clicks: int, p_ico
 func add_upgrade(upgrade: ItemUpgrade):
 	upgrades.append(upgrade)
 
-# NÃO MEXER (fórmula): soma o valor base do item + os bônus dos upgrades de clique.
+# NÃO MEXER (fórmula): valor base do item + bônus de clique de cada upgrade.
 func get_aura_per_click() -> float:
 	var total = aura_per_click
 	for u in upgrades:
-		if u.modifier_type == "click":
-			total += u.modifier * u.level
+		total += u.total_for("click")
 	return total
 
-# NÃO MEXER (fórmula): soma o ganho passivo base + os bônus dos upgrades passivos.
+# NÃO MEXER (fórmula): ganho passivo base + bônus passivo de cada upgrade.
 func get_passive_gain() -> float:
 	var total = base_passive
 	for u in upgrades:
-		if u.modifier_type == "passive":
-			total += u.modifier * u.level
+		total += u.total_for("passive")
 	return total

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="aura-maxing"
-run/main_scene="uid://djpvv7s5gjmv1"
+run/main_scene="uid://cuo6mnqlyjei2"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
 

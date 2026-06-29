@@ -1,13 +1,38 @@
-[gd_scene format=3 uid="uid://djpvv7s5gjmv1"]
+[gd_scene format=3 uid="uid://bx7ya7ke8mxby"]
 
-[ext_resource type="Script" uid="uid://banpfic7p4squ" path="res://scripts/menu.gd" id="1_yqeox"]
+[sub_resource type="GDScript" id="GDScript_4h3mk"]
+script/source = "extends Control
+
+@onready var new_game_btn = $CenterContainer/VBoxContainer/NewGameBtn
+@onready var continue_btn = $CenterContainer/VBoxContainer/ContinueBtn
+
+func _ready():
+	new_game_btn.pressed.connect(_on_new_game)
+	continue_btn.pressed.connect(_on_continue)
+	
+	if not FileAccess.file_exists(\"user://save.dat\"):
+		continue_btn.visible = false
+
+func _on_new_game():
+	new_game_btn.text = \"Loading...\"
+	new_game_btn.disabled = true
+	SaveManager.delete_save()
+	await get_tree().create_timer(0.3).timeout
+	get_tree().change_scene_to_file(\"res://scenes/main.tscn\")
+
+func _on_continue():
+	continue_btn.text = \"Loading...\"
+	continue_btn.disabled = true
+	await get_tree().create_timer(0.3).timeout
+	get_tree().change_scene_to_file(\"res://scenes/main.tscn\")
+"
 
 [node name="Menu" type="Control" unique_id=1402993995]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 761.0
 offset_bottom = 1280.0
-script = ExtResource("1_yqeox")
+script = SubResource("GDScript_4h3mk")
 
 [node name="Background" type="TextureRect" parent="." unique_id=656486052]
 layout_mode = 1

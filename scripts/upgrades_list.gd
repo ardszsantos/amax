@@ -3,6 +3,10 @@ extends Control
 const ItemRow = preload("res://ui/item_row.tscn")
 
 @onready var list: VBoxContainer = %UpgradeList
+@onready var info_popup: Control = %UpgradeInfoPopup
+@onready var info_backdrop: Control = %UpgradeInfoBackdrop
+@onready var popup_title: Label = %UpgradeInfoTitle
+@onready var popup_desc: Label = %UpgradeInfoDesc
 
 # Guarda quais upgrades estavam "compráveis" na última montagem,
 # pra só re-ordenar quando isso muda (evita rebuild a cada frame).
@@ -12,9 +16,13 @@ var _busy: bool = false
 
 func _ready() -> void:
 	visibility_changed.connect(_on_visibility_changed)
+	info_popup.visible = false
+	# Tocar no fundo escuro fecha o popup.
+	info_backdrop.gui_input.connect(_on_backdrop_input)
 
 func _on_visibility_changed() -> void:
 	if visible:
+		info_popup.visible = false
 		build_list()
 
 func _process(_delta: float) -> void:
@@ -58,6 +66,7 @@ func build_list() -> void:
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.setup_upgrade(e.item, e.upgrade, affordable)
 		row.upgrade_pressed.connect(_on_upgrade_pressed.bind(row))
+		row.upgrade_info_pressed.connect(_on_upgrade_info)
 
 	_last_signature = _current_signature()
 
@@ -87,3 +96,13 @@ func _on_upgrade_pressed(up: ItemUpgrade, row) -> void:
 		build_list()
 	else:
 		row.flash_denied()  # sem aura -> vermelho
+
+# Abre o popup com os stats do upgrade (clique + passivo + o que mais tiver).
+func _on_upgrade_info(item: Item, upgrade: ItemUpgrade) -> void:
+	popup_title.text = item.item_name + " · " + upgrade.upgrade_name
+	popup_desc.text = upgrade.describe()
+	info_popup.visible = true
+
+func _on_backdrop_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		info_popup.visible = false

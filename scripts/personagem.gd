@@ -11,10 +11,17 @@ var is_clicking: bool = false
 @onready var main = get_node("/root/Main")
 @onready var sprite = $AnimatedSprite2D
 
+# Posição de descanso fixa do sprite e a transição em andamento.
+# Guardamos o Y de descanso uma vez só pra que transições interrompidas
+# nunca leiam uma posição "no meio do caminho" como se fosse o repouso.
+var rest_y: float
+var transition_tween: Tween
+
 func _ready():
 	input_pickable = true
 	connect("input_event", _on_input_event)
 	main.item_changed.connect(_on_item_changed)
+	rest_y = sprite.position.y
 	sprite.stop()
 	call_deferred("update_sprite_state")
 
@@ -31,7 +38,7 @@ func _on_input_event(_viewport, event, _shape_idx):
 		main.on_click()
 
 		var ft = floating_text_scene.instantiate()
-		ft.text = "+" + str(item.get_aura_per_click()) + " Aura"
+		ft.text = "+" + str(snapped(main.get_click_value(), 0.001)) + " Aura"
 		ft.global_position = get_global_mouse_position()
 		main.add_child(ft)
 
@@ -60,24 +67,37 @@ func _on_input_event(_viewport, event, _shape_idx):
 			sprite.frame = next_frame
 
 func update_sprite_state():
-	sprite.animation = main.get_current_item().item_name
-	sprite.frame = 0
+	var anim = main.get_current_item().item_name
+	# Itens sem animação própria (ex.: Gloving, Hype Beast) mantêm a animação
+	# atual em vez de quebrar com "Animation doesn't exist". Assim que existir
+	# uma animação com o nome do item no SpriteFrames, ela passa a ser usada.
+	if sprite.sprite_frames.has_animation(anim):
+		sprite.animation = anim
+		sprite.frame = 0
 
 func _on_item_changed(_new_index: int):
+	# Interrompe qualquer transição anterior e remove sprites duplicados que
+	# tenham sobrado, pra não acumular cópias nem corromper a posição de repouso.
+	if transition_tween and transition_tween.is_valid():
+		transition_tween.kill()
+	for child in get_children():
+		if child != sprite and child is AnimatedSprite2D:
+			child.queue_free()
+
+	# Cópia do item ANTERIOR (descansando em rest_y), que vai sair deslizando.
 	var old_sprite = sprite.duplicate()
 	add_child(old_sprite)
+	old_sprite.position.y = rest_y
 
 	update_sprite_state()
 
-	var center_y = sprite.position.y
 	var offset_y = get_viewport_rect().size.y
+	sprite.position.y = rest_y + offset_y
 
-	sprite.position.y = center_y + offset_y
+	transition_tween = create_tween().set_parallel(true)
+	transition_tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 
-	var tween = create_tween().set_parallel(true)
-	tween.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	transition_tween.tween_property(old_sprite, "position:y", rest_y - offset_y, 0.4)
+	transition_tween.tween_property(sprite, "position:y", rest_y, 0.4)
 
-	tween.tween_property(old_sprite, "position:y", center_y - offset_y, 0.4)
-	tween.tween_property(sprite, "position:y", center_y, 0.4)
-
-	tween.chain().tween_callback(old_sprite.queue_free)
+	transition_tween.chain().tween_callback(old_sprite.queue_free)
