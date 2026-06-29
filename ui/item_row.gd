@@ -2,8 +2,10 @@ extends PanelContainer
 
 # Emitido ao tocar no card (comprar/desbloquear o item).
 signal buy_pressed(index: int)
-# Emitido ao tocar no "?" (abrir o popup de descrição).
+# Emitido ao tocar no "?" de um item (abrir o popup de descrição do item).
 signal info_pressed(index: int)
+# Emitido ao tocar no "?" de um upgrade (abrir o popup de stats do upgrade).
+signal upgrade_info_pressed(item: Item, upgrade: ItemUpgrade)
 # Emitido ao tocar num card de upgrade (comprar 1 nível).
 signal upgrade_pressed(upgrade: ItemUpgrade)
 
@@ -34,6 +36,8 @@ const FLASH_COLOR := {
 var item_index: int = -1
 var disabled: bool = false
 var upgrade: ItemUpgrade = null
+# Item dono do upgrade (só usado em cards de upgrade, pro popup de info).
+var row_item: Item = null
 var state: int = STATE_NONE
 var _rest_modulate := Color(1, 1, 1, 1)
 var _fx_tween: Tween
@@ -48,7 +52,7 @@ func _ready() -> void:
 		else:
 			node.mouse_filter = Control.MOUSE_FILTER_PASS
 
-	info_button.pressed.connect(func(): info_pressed.emit(item_index))
+	info_button.pressed.connect(_on_info_button)
 	gui_input.connect(_on_gui_input)
 
 	# Escala a partir do centro, não do canto.
@@ -63,6 +67,7 @@ func _ready() -> void:
 func setup(item: Item, index: int, cost: int, owned: bool, affordable: bool) -> void:
 	item_index = index
 	upgrade = null
+	row_item = null
 	disabled = false
 	title_label.text = item.item_name
 	cost_label.text = "Owned" if owned else "custo: " + str(cost) + " aura"
@@ -81,12 +86,15 @@ func setup(item: Item, index: int, cost: int, owned: bool, affordable: bool) -> 
 func setup_upgrade(item: Item, up: ItemUpgrade, affordable: bool) -> void:
 	item_index = -1
 	upgrade = up
+	row_item = item
 	disabled = false
 	title_label.text = item.item_name + " · " + up.upgrade_name
 	cost_label.text = "Lv " + str(up.level) + "  ·  custo: " + str(up.cost) + " aura"
 	if item.icon != null:
 		icon.texture = item.icon
-	info_button.visible = false
+	# Mostra o "?" pra abrir o popup com os stats do upgrade.
+	info_button.visible = true
+	info_button.disabled = false
 	if affordable:
 		state = STATE_BUYABLE
 		_set_rest(Color(1, 1, 1, 1))
@@ -160,6 +168,13 @@ func _kill_fx() -> void:
 		_fx_tween.kill()
 
 # ---------- INPUT ----------
+
+func _on_info_button() -> void:
+	# Card de upgrade abre o popup de stats; card de item abre a descrição.
+	if upgrade != null:
+		upgrade_info_pressed.emit(row_item, upgrade)
+	else:
+		info_pressed.emit(item_index)
 
 func _on_gui_input(event: InputEvent) -> void:
 	if disabled:

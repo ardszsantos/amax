@@ -36,14 +36,17 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=587310168]
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_418jv")
 
 [node name="Icon" type="TextureRect" parent="MarginContainer/HBoxContainer/PanelContainer" unique_id=595743170]
 clip_contents = true
 custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
-size_flags_vertical = 4
+size_flags_horizontal = 3
+size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 6
 

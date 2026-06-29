@@ -6,14 +6,20 @@ var items: Array = []
 var current_item_index: int = 0
 var current_clicks: float = 0.0
 var save_timer: float = 0.0
+# Tempo restante de imunidade pós-promoção (ver PROMOTE_GRACE).
+var promote_grace: float = 0.0
 
 # >>> EDITÁVEL: quanto de progresso (em "cliques") a barra perde por segundo.
 # A drenagem é CONSTANTE — acontece sempre, até enquanto o jogador clica.
 # É uma força puxando a barra pra baixo; pra avançar, os cliques têm que
 # vencer essa força. Maior = mais difícil avançar.
 const DRAIN_PER_SECOND: float = 1.5
-# >>> EDITÁVEL: de quantos em quantos segundos o jogo salva sozinho.
-const SAVE_INTERVAL: float = 5.0
+# >>> EDITÁVEL: segundos de "imunidade" logo após promover pra um item novo.
+# Durante essa janela a barra não drena nem demove, dando tempo de começar a clicar.
+const PROMOTE_GRACE: float = 2.0
+# >>> EDITÁVEL: de quantos em quantos segundos o jogo salva sozinho
+# (também é a frequência com que o "saved ✓" aparece no canto).
+const SAVE_INTERVAL: float = 30.0
 
 @onready var home_screen = $HomeScreen
 @onready var items_screen = $ItemsScreen
@@ -33,7 +39,11 @@ const SAVE_INTERVAL: float = 5.0
 
 @onready var resume_btn = $PauseMenu/VBoxContainer/ResumeBtn
 @onready var save_btn = $PauseMenu/VBoxContainer/SaveBtn
-@onready var menu_btn = $PauseMenu/VBoxContainer/MenuBtn
+@onready var wipe_btn = $PauseMenu/VBoxContainer/WipeBtn
+@onready var save_flash = $HomeScreen/SaveFlash
+
+# Estado do botão "Wipe Save": precisa de dois toques pra confirmar.
+var wipe_armed: bool = false
 
 signal item_changed(new_index: int)
 
@@ -48,11 +58,11 @@ func _ready():
 	#     - CLIQUES_PRA_AVANCAR: quantos cliques pra passar pro próximo item.
 	# ============================================================
 	items = [
-		Item.new("67", 0.143, 1, 20, preload("res://assets/ui/cr7.jpg")),
+		Item.new("67", 0.143, 1, 20, preload("res://assets/ui/67_icone.png")),
 		Item.new("Mewing", 1, 7, 20, preload("res://assets/ui/mewing.png")),
-		Item.new("Academia",7.142, 50, 20),
-		Item.new("Gloving",49.994 , 350, 20),
-		Item.new("Hype Beast", 349.985,2450, 20),
+		Item.new("Academia", 7.142, 50, 20, preload("res://assets/ui/gym_icone.png")),
+		Item.new("Gloving", 49.994, 350, 20, preload("res://assets/ui/gloving.jpg")),
+		Item.new("Hype Beast", 349.985, 2450, 20, preload("res://assets/ui/hyper_beast_icone.png")),
 	]
 	items[0].unlocked = true
 
@@ -64,28 +74,26 @@ func _ready():
 	items[4].description = "se é caro, é aura."
 
 	# ============================================================
-	# >>> EDITÁVEL: UPGRADES DE CADA ITEM
+	# >>> EDITÁVEL: UPGRADE DE CADA ITEM (1 só por item)
 	# items[0] = "67", items[1] = "Mewing", items[2] = "Academia", etc.
 	# Cada ItemUpgrade.new() segue esta ordem:
-	#   ItemUpgrade.new( NOME , CUSTO_INICIAL , BONUS , TIPO )
+	#   ItemUpgrade.new( NOME , CUSTO_INICIAL , EFEITOS )
+	#     - NOME: texto que aparece no card do upgrade.
 	#     - CUSTO_INICIAL: preço da 1ª compra (sobe sozinho a cada nível).
-	#     - BONUS: quanto cada nível soma.
-	#     - TIPO: "click" soma na aura por clique | "passive" soma no ganho por segundo.
+	#     - EFEITOS: dicionário { stat: quanto soma POR NÍVEL }.
+	#         "click"   -> soma na AURA POR CLIQUE
+	#         "passive" -> soma no GANHO PASSIVO por segundo
+	#   >>> Pra balancear, mexa no custo e nos números dentro do { }.
+	#   >>> Pra um stat novo, basta inventar uma chave nova (ex.: "crit": 0.05)
+	#       e ensinar o jogo a usá-la (ver comentários em item_upgrade.gd).
 	# ============================================================
-	items[0].add_upgrade(ItemUpgrade.new("Click Boost", 10, 0.143, "click"))
-	items[0].add_upgrade(ItemUpgrade.new("Passive Gain", 15, 1, "passive"))
-
-	items[1].add_upgrade(ItemUpgrade.new("Click Boost", 200, 1, "click"))
-	items[1].add_upgrade(ItemUpgrade.new("Passive Gain", 300, 7, "passive"))
-
-	items[2].add_upgrade(ItemUpgrade.new("Click Boost", 4000, 10.0, "click"))
-	items[2].add_upgrade(ItemUpgrade.new("Passive Gain", 6000, 70, "passive"))
-
-	items[3].add_upgrade(ItemUpgrade.new("Click Boost", 80000, 110, "click"))
-	items[3].add_upgrade(ItemUpgrade.new("Passive Gain", 120000, 770, "passive"))
-
-	items[4].add_upgrade(ItemUpgrade.new("Click Boost", 1600000, 1110, "click"))
-	items[4].add_upgrade(ItemUpgrade.new("Passive Gain",2400000 , 7700, "passive"))
+	# Custo = meio-termo entre os custos que o Pedro fez separados (click/passive).
+	# Buffs (click e passive) = 100% dos valores dele.
+	items[0].add_upgrade(ItemUpgrade.new("Boost", 13, {"click": 0.143, "passive": 1.0}))
+	items[1].add_upgrade(ItemUpgrade.new("Boost", 250, {"click": 1.0, "passive": 7.0}))
+	items[2].add_upgrade(ItemUpgrade.new("Boost", 5000, {"click": 10.0, "passive": 70.0}))
+	items[3].add_upgrade(ItemUpgrade.new("Boost", 100000, {"click": 110.0, "passive": 770.0}))
+	items[4].add_upgrade(ItemUpgrade.new("Boost", 2000000, {"click": 1110.0, "passive": 7700.0}))
 
 	SaveManager.load_game(self)
 	recalculate_passive()
@@ -99,7 +107,7 @@ func _ready():
 	pause_menu.visible = false
 	resume_btn.pressed.connect(_toggle_pause)
 	save_btn.pressed.connect(_on_save)
-	menu_btn.pressed.connect(_on_return_menu)
+	wipe_btn.pressed.connect(_on_wipe_save)
 
 	update_hud()
 	switch_screen(home_screen)
@@ -108,9 +116,17 @@ func _ready():
 func get_current_item() -> Item:
 	return items[current_item_index]
 
+# Aura por clique CUMULATIVA: soma o valor do item atual + todos os anteriores.
+# Ex.: no Mewing você ganha o clique do Mewing + o do 67 junto.
+func get_click_value() -> float:
+	var total = 0.0
+	for i in range(current_item_index + 1):
+		total += items[i].get_aura_per_click()
+	return total
+
 func on_click():
 	var item = get_current_item()
-	aura += item.get_aura_per_click()
+	aura += get_click_value()
 	current_clicks += 1
 
 	if can_advance() and current_clicks >= item.clicks_to_advance:
@@ -126,6 +142,14 @@ func can_advance() -> bool:
 func advance_item():
 	current_item_index += 1
 	current_clicks = 0
+	promote_grace = PROMOTE_GRACE
+	update_hud()
+	item_changed.emit(current_item_index)
+
+# Inverso do advance: escorrega pro item anterior com a barra cheia.
+func demote_item():
+	current_item_index -= 1
+	current_clicks = get_current_item().clicks_to_advance
 	update_hud()
 	item_changed.emit(current_item_index)
 
@@ -141,10 +165,18 @@ func reset_to_first():
 # clica). É uma força puxando o progresso pra baixo: os cliques precisam
 # vencer ela pra avançar. Esvazia até 0 e para ali.
 func _drain(delta: float):
+	# Janela de imunidade pós-promoção: não drena nem demove.
+	if promote_grace > 0.0:
+		promote_grace = max(0.0, promote_grace - delta)
+		return
 	if current_clicks <= 0.0:
 		return
 	current_clicks = max(0.0, current_clicks - DRAIN_PER_SECOND * delta)
-	update_hud()
+	# Barra zerou: se não for o primeiro item, escorrega pro anterior.
+	if current_clicks <= 0.0 and current_item_index > 0:
+		demote_item()
+	else:
+		update_hud()
 
 func recalculate_passive():
 	aura_per_second = 0.0
@@ -180,18 +212,37 @@ func switch_screen(screen: Control):
 
 func _toggle_pause():
 	pause_menu.visible = not pause_menu.visible
+	# Sempre que o menu abre/fecha, desarma o "Wipe Save" pra não apagar sem querer.
+	_disarm_wipe()
 
 func _on_save():
 	SaveManager.save_game(self)
+	_flash_saved()
 	save_btn.text = "Saved!"
 	save_btn.disabled = true
 	await get_tree().create_timer(1.5).timeout
 	save_btn.text = "Save"
 	save_btn.disabled = false
 
-func _on_return_menu():
-	SaveManager.save_game(self)
-	get_tree().change_scene_to_file("res://scenes/menu.tscn")
+# Mostra um "saved ✓" discreto no canto, segura ~2s e some suave.
+func _flash_saved():
+	save_flash.modulate.a = 1.0
+	var tween = create_tween()
+	tween.tween_interval(2.0)
+	tween.tween_property(save_flash, "modulate:a", 0.0, 1.0)
+
+func _disarm_wipe():
+	wipe_armed = false
+	wipe_btn.text = "Wipe Save"
+
+# Primeiro toque arma; segundo toque apaga o save e recomeça do zero.
+func _on_wipe_save():
+	if not wipe_armed:
+		wipe_armed = true
+		wipe_btn.text = "Sure? Tap again"
+		return
+	SaveManager.delete_save()
+	get_tree().reload_current_scene()
 
 func _process(delta):
 	_drain(delta)
@@ -200,6 +251,7 @@ func _process(delta):
 	if save_timer >= SAVE_INTERVAL:
 		save_timer = 0.0
 		SaveManager.save_game(self)
+		_flash_saved()
 
 	if aura_per_second > 0:
 		var old_aura = int(aura)
