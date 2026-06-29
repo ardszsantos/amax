@@ -10,8 +10,11 @@
 [ext_resource type="Texture2D" uid="uid://nfvdvan3817d" path="res://assets/sprites/gym_frame_2.png" id="8_2wyq8"]
 [ext_resource type="Texture2D" uid="uid://cnadyiu7w05k2" path="res://assets/sprites/gym_frame_3.png" id="9_vxglm"]
 [ext_resource type="Texture2D" uid="uid://ceqydrs7ls87c" path="res://assets/sprites/maewing_fram_1.png" id="10_2f3dj"]
+[ext_resource type="Texture2D" uid="uid://2oph4ncumhka" path="res://assets/sprites/hyper_beast_1.png" id="10_jscy8"]
+[ext_resource type="Texture2D" uid="uid://cbyud6yghddh0" path="res://assets/sprites/hyper_beast_2.png" id="11_pm3ni"]
 [ext_resource type="Texture2D" uid="uid://dcmjc0oytxu7l" path="res://assets/sprites/maewing_fram_2.png" id="11_yq6so"]
 [ext_resource type="Texture2D" uid="uid://bpaohgc83fa34" path="res://assets/sprites/maewing_fram_3.png" id="12_fv21b"]
+[ext_resource type="Texture2D" uid="uid://den3iteje357l" path="res://assets/sprites/hyper_beast_3.png" id="12_y6deb"]
 [ext_resource type="Texture2D" uid="uid://bxfbqjpfiqc23" path="res://assets/sprites/maewing_fram_4.png" id="13_tel4y"]
 [ext_resource type="Texture2D" uid="uid://bqepodg4inb1t" path="res://assets/ui/heart-aura.png" id="14_qkpxi"]
 [ext_resource type="Texture2D" uid="uid://ckoyxrdmeutv0" path="res://assets/ui/comments-aura.png" id="15_5q0nq"]
@@ -51,6 +54,20 @@ animations = [{
 }],
 "loop": false,
 "name": &"Academia",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_jscy8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_pm3ni")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_y6deb")
+}],
+"loop": true,
+"name": &"HypeBeast",
 "speed": 5.0
 }, {
 "frames": [{
@@ -211,9 +228,7 @@ shape = SubResource("RectangleShape2D_lquwl")
 position = Vector2(-8.999999, 143.99998)
 scale = Vector2(0.7984375, 0.7984375)
 sprite_frames = SubResource("SpriteFrames_1bvp3")
-animation = &"67"
-frame = 2
-frame_progress = 1.0
+animation = &"Mewing"
 
 [node name="SideButtons" type="PanelContainer" parent="HomeScreen" unique_id=391757765]
 custom_minimum_size = Vector2(0, 60)
