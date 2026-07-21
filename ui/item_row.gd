@@ -63,22 +63,20 @@ func _ready() -> void:
 
 # ---------- SETUP ----------
 
-# Card de item (tela de itens).
-func setup(item: Item, index: int, cost: int, owned: bool, affordable: bool) -> void:
+# Card de item (tela de itens). Item é comprável infinitas vezes: cada compra
+# sobe 1 nível. Mostra o nível atual e o custo da PRÓXIMA compra.
+func setup(item: Item, index: int, affordable: bool) -> void:
 	item_index = index
 	upgrade = null
 	row_item = null
 	disabled = false
 	title_label.text = item.item_name
-	cost_label.text = "Owned" if owned else "custo: " + str(cost) + " aura"
+	if item.level > 0:
+		title_label.text += "  ·  Lv " + str(item.level)
+	cost_label.text = "custo: " + str(item.cost) + " aura"
 	if item.icon != null:
 		icon.texture = item.icon
-	if owned:
-		state = STATE_OWNED
-	elif affordable:
-		state = STATE_BUYABLE
-	else:
-		state = STATE_DENIED
+	state = STATE_BUYABLE if affordable else STATE_DENIED
 	_set_rest(Color(1, 1, 1, 1))
 
 # Card de upgrade (tela de upgrades). Não-comprável fica cinza, mas ainda
@@ -88,8 +86,8 @@ func setup_upgrade(item: Item, up: ItemUpgrade, affordable: bool) -> void:
 	upgrade = up
 	row_item = item
 	disabled = false
-	title_label.text = item.item_name + " · " + up.upgrade_name
-	cost_label.text = "Lv " + str(up.level) + "  ·  custo: " + str(up.cost) + " aura"
+	title_label.text = up.upgrade_name
+	cost_label.text = "custo: " + str(up.cost) + " aura"
 	if item.icon != null:
 		icon.texture = item.icon
 	# Mostra o "?" pra abrir o popup com os stats do upgrade.

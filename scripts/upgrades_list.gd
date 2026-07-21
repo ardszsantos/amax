@@ -42,20 +42,18 @@ func build_list() -> void:
 	for child in list.get_children():
 		child.queue_free()
 
-	# Coleta os upgrades de todos os itens que o jogador POSSUI.
+	# Upgrades dos itens que o jogador POSSUI e que ainda NÃO foram comprados
+	# (compra única: uma vez comprado, some da lista).
 	var entries: Array = []
 	for item in main.items:
 		if not item.unlocked:
 			continue
 		for up in item.upgrades:
-			entries.append({"item": item, "upgrade": up})
+			if not up.purchased:
+				entries.append({"item": item, "upgrade": up})
 
-	# Ordena: compráveis primeiro, e dentro de cada grupo o mais barato no topo.
+	# Do mais barato ao mais caro (spec do Miro).
 	entries.sort_custom(func(a, b):
-		var a_afford = main.aura >= a.upgrade.cost
-		var b_afford = main.aura >= b.upgrade.cost
-		if a_afford != b_afford:
-			return a_afford
 		return a.upgrade.cost < b.upgrade.cost
 	)
 
@@ -70,7 +68,7 @@ func build_list() -> void:
 
 	_last_signature = _current_signature()
 
-# Lista de bools (dá pra comprar?) na ordem dos itens/upgrades.
+# Lista de bools (dá pra comprar?) dos upgrades ainda não comprados.
 func _current_signature() -> Array:
 	var main = get_node("/root/Main")
 	var sig: Array = []
@@ -78,7 +76,8 @@ func _current_signature() -> Array:
 		if not item.unlocked:
 			continue
 		for up in item.upgrades:
-			sig.append(main.aura >= up.cost)
+			if not up.purchased:
+				sig.append(main.aura >= up.cost)
 	return sig
 
 func _on_upgrade_pressed(up: ItemUpgrade, row) -> void:
@@ -93,11 +92,11 @@ func _on_upgrade_pressed(up: ItemUpgrade, row) -> void:
 		# Deixa o flash/punch da row tocar antes de reconstruir a lista.
 		await get_tree().create_timer(0.16).timeout
 		_busy = false
-		build_list()
+		build_list()  # comprado -> some da lista
 	else:
 		row.flash_denied()  # sem aura -> vermelho
 
-# Abre o popup com os stats do upgrade (clique + passivo + o que mais tiver).
+# Abre o popup com os efeitos do upgrade (clique + passivo + o que mais tiver).
 func _on_upgrade_info(item: Item, upgrade: ItemUpgrade) -> void:
 	popup_title.text = item.item_name + " · " + upgrade.upgrade_name
 	popup_desc.text = upgrade.describe()

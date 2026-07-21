@@ -22,7 +22,6 @@ func _ready():
 	connect("input_event", _on_input_event)
 	main.item_changed.connect(_on_item_changed)
 	rest_y = sprite.position.y
-	sprite.stop()
 	call_deferred("update_sprite_state")
 
 func _process(delta):
@@ -36,16 +35,12 @@ func _on_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		var item = main.get_current_item()
 		main.on_click()
+		Audio.play_sfx("click")
 
 		var ft = floating_text_scene.instantiate()
 		ft.text = "+" + str(snapped(main.get_click_value(), 0.001)) + " Aura"
 		ft.global_position = get_global_mouse_position()
 		main.add_child(ft)
-
-		# HypeBeast tem animação automática (play/loop), então o clique só conta
-		# a aura — não avançamos frames manualmente pra não brigar com ela.
-		if item.item_name == "HypeBeast":
-			return
 
 		is_clicking = true
 		click_timer = 0.0
@@ -62,7 +57,7 @@ func _on_input_event(_viewport, event, _shape_idx):
 					loop_start = 1
 				"Mewing":
 					loop_start = 1
-				"Gloving", "Academia", "Hype Beast":
+				"Academia", "HypeBeast":
 					loop_start = 0
 
 			var next_frame = sprite.frame + 1
@@ -73,20 +68,18 @@ func _on_input_event(_viewport, event, _shape_idx):
 
 func update_sprite_state():
 	var anim = main.get_current_item().item_name
-	# Itens sem animação própria (ex.: Gloving, Hype Beast) mantêm a animação
-	# atual em vez de quebrar com "Animation doesn't exist". Assim que existir
-	# uma animação com o nome do item no SpriteFrames, ela passa a ser usada.
+	# Itens sem animação própria mantêm a animação atual em vez de quebrar com
+	# "Animation doesn't exist". Assim que existir uma animação com o nome do
+	# item no SpriteFrames, ela passa a ser usada.
 	if sprite.sprite_frames.has_animation(anim):
 		sprite.animation = anim
 		sprite.frame = 0
-		# HypeBeast cicla sozinho entre os 3 frames; os demais itens só avançam
-		# frame no clique, então ficam parados (stop) esperando o input.
-		if anim == "HypeBeast":
-			sprite.play()
-		else:
-			sprite.stop()
 
 func _on_item_changed(_new_index: int):
+	# Swipe na troca de sprite: vale pra avançar E pra regredir (demote quando a
+	# barra decai), porque toda troca passa por aqui via o sinal item_changed.
+	Audio.play_sfx("swipe")
+
 	# Interrompe qualquer transição anterior e remove sprites duplicados que
 	# tenham sobrado, pra não acumular cópias nem corromper a posição de repouso.
 	if transition_tween and transition_tween.is_valid():

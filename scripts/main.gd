@@ -51,49 +51,47 @@ func _ready():
 	# ============================================================
 	# >>> EDITÁVEL: LISTA DE ITENS
 	# Cada Item.new() segue esta ordem:
-	#   Item.new( NOME , AURA_POR_CLIQUE , GANHO_PASSIVO_POR_SEGUNDO , CLIQUES_PRA_AVANCAR )
+	#   Item.new( NOME , AURA_POR_CLIQUE , GANHO_PASSIVO/s , CLIQUES_PRA_AVANCAR , CUSTO_BASE , ICONE )
 	#     - NOME: precisa bater EXATAMENTE com o nome da animação do sprite.
-	#     - AURA_POR_CLIQUE: quanto ganha em cada clique (antes dos upgrades).
-	#     - GANHO_PASSIVO_POR_SEGUNDO: aura que pinga sozinha, por segundo, se desbloqueado.
+	#     - AURA_POR_CLIQUE: aura por clique NO NÍVEL 1 (escala com o nível do item).
+	#     - GANHO_PASSIVO/s: aura passiva por segundo NO NÍVEL 1 (escala com o nível).
 	#     - CLIQUES_PRA_AVANCAR: quantos cliques pra passar pro próximo item.
+	#     - CUSTO_BASE: preço da 1ª compra. Sobe a cada nível comprado.
+	# Item começa no nível 0 (bloqueado); cada compra na tela de itens = +1 nível.
 	# ============================================================
 	items = [
-		Item.new("67", 0.143, 1, 20, preload("res://assets/ui/67_icone.png")),
-		Item.new("Mewing", 1, 7, 20, preload("res://assets/ui/mewing.png")),
-		Item.new("Academia", 7.142, 50, 20, preload("res://assets/ui/gym_icone.png")),
-		Item.new("Gloving", 49.994, 350, 20, preload("res://assets/ui/gloving.jpg")),
-		Item.new("HypeBeast", 349.985, 2450, 20, preload("res://assets/ui/hyper_beast_icone.png")),
+		Item.new("67", 0.143, 1, 20, 50, preload("res://assets/ui/67_icone.png")),
+		Item.new("Mewing", 1, 7, 20, 500, preload("res://assets/ui/mewing.png")),
+		Item.new("Academia", 7.142, 50, 20, 5000, preload("res://assets/ui/gym_icone.png")),
+		Item.new("HypeBeast", 349.985, 2450, 20, 50000, preload("res://assets/ui/hyper_beast_icone.png")),
 	]
-	items[0].unlocked = true
+	# O primeiro item começa desbloqueado (nível 1).
+	items[0].level = 1
 
 	# >>> EDITÁVEL: descrição que aparece no popup do "?" (estilo meme, edita à vontade).
 	items[0].description = "durante seu treino você finalmente entendeu, o 67 é a verdade absoluta"
 	items[1].description = "língua no céu da boca. o maxilar agradece."
 	items[2].description = "sem dor, sem aura. simples assim."
-	items[3].description = "bota a luva. o resto acontece."
-	items[4].description = "se é caro, é aura."
+	items[3].description = "se é caro, é aura."
 
 	# ============================================================
-	# >>> EDITÁVEL: UPGRADE DE CADA ITEM (1 só por item)
-	# items[0] = "67", items[1] = "Mewing", items[2] = "Academia", etc.
+	# >>> EDITÁVEL: UPGRADES DE COMPRA ÚNICA (1 por item, por enquanto)
+	# items[0]="67", items[1]="Mewing", items[2]="Academia", items[3]="HypeBeast".
 	# Cada ItemUpgrade.new() segue esta ordem:
-	#   ItemUpgrade.new( NOME , CUSTO_INICIAL , EFEITOS )
+	#   ItemUpgrade.new( NOME , CUSTO , EFEITOS )
 	#     - NOME: texto que aparece no card do upgrade.
-	#     - CUSTO_INICIAL: preço da 1ª compra (sobe sozinho a cada nível).
-	#     - EFEITOS: dicionário { stat: quanto soma POR NÍVEL }.
-	#         "click"   -> soma na AURA POR CLIQUE
-	#         "passive" -> soma no GANHO PASSIVO por segundo
-	#   >>> Pra balancear, mexa no custo e nos números dentro do { }.
-	#   >>> Pra um stat novo, basta inventar uma chave nova (ex.: "crit": 0.05)
-	#       e ensinar o jogo a usá-la (ver comentários em item_upgrade.gd).
+	#     - CUSTO: preço (compra única -- some da lista depois de comprado).
+	#     - EFEITOS: dicionário { stat: MULTIPLICADOR } aplicado à produção do item.
+	#         "click"   -> multiplica a AURA POR CLIQUE do item
+	#         "passive" -> multiplica o GANHO PASSIVO do item
+	#   >>> Pra um stat novo, use uma chave nova e ensine o item a lê-la
+	#       (ver _upgrade_multiplier em item.gd).
+	# >>> Os 2x são PLACEHOLDER do Miro -- ajustar depois.
 	# ============================================================
-	# Custo = meio-termo entre os custos que o Pedro fez separados (click/passive).
-	# Buffs (click e passive) = 100% dos valores dele.
-	items[0].add_upgrade(ItemUpgrade.new("Boost", 13, {"click": 0.143, "passive": 1.0}))
-	items[1].add_upgrade(ItemUpgrade.new("Boost", 250, {"click": 1.0, "passive": 7.0}))
-	items[2].add_upgrade(ItemUpgrade.new("Boost", 5000, {"click": 10.0, "passive": 70.0}))
-	items[3].add_upgrade(ItemUpgrade.new("Boost", 100000, {"click": 110.0, "passive": 770.0}))
-	items[4].add_upgrade(ItemUpgrade.new("Boost", 2000000, {"click": 1110.0, "passive": 7700.0}))
+	items[0].add_upgrade(ItemUpgrade.new("Angolanos do 67", 500, {"click": 2.0, "passive": 2.0}))
+	items[1].add_upgrade(ItemUpgrade.new("Meditações do Maewing", 5000, {"click": 2.0, "passive": 2.0}))
+	items[2].add_upgrade(ItemUpgrade.new("Supino Perfeito", 50000, {"click": 2.0, "passive": 2.0}))
+	items[3].add_upgrade(ItemUpgrade.new("Besta do Hype", 5000000, {"click": 2.0, "passive": 2.0}))
 
 	SaveManager.load_game(self)
 	recalculate_passive()
@@ -110,7 +108,7 @@ func _ready():
 	wipe_btn.pressed.connect(_on_wipe_save)
 
 	update_hud()
-	switch_screen(home_screen)
+	switch_screen(home_screen, false)
 	items_screen.build_list()
 
 func get_current_item() -> Item:
@@ -204,11 +202,15 @@ func on_item_unlocked():
 	if current_clicks >= get_current_item().clicks_to_advance and can_advance():
 		advance_item()
 
-func switch_screen(screen: Control):
+func switch_screen(screen: Control, play_swipe: bool = true):
 	home_screen.visible = false
 	items_screen.visible = false
 	upgrades_screen.visible = false
 	screen.visible = true
+	# Swipe na troca de tela/menu. play_swipe=false no boot (montar a tela
+	# inicial não é uma transição que o jogador provocou).
+	if play_swipe:
+		Audio.play_sfx("swipe")
 
 func _toggle_pause():
 	pause_menu.visible = not pause_menu.visible
