@@ -8,17 +8,32 @@ const ItemRow = preload("res://ui/item_row.tscn")
 @onready var popup_title: Label = %PopupTitle
 @onready var popup_desc: Label = %PopupDesc
 
+# Guarda o estado (nível + comprável?) da última montagem, pra só re-montar
+# quando algo muda (evita rebuild a cada frame).
+var _last_signature: Array = []
+# Trava o rebuild enquanto a animação de compra toca.
+var _busy: bool = false
+
 func _ready() -> void:
 	info_popup.visible = false
 	# Tocar no fundo escuro fecha o popup.
 	info_backdrop.gui_input.connect(_on_backdrop_input)
-	# Ao reabrir a tela de itens, garante o popup fechado.
+	# Ao reabrir a tela de itens, garante popup fechado e lista atualizada.
 	visibility_changed.connect(func():
 		if visible:
 			info_popup.visible = false
+			build_list()
 	)
 
-# Reconstroi a lista de itens. Chamado pelo Main no _ready e apos cada compra.
+func _process(_delta: float) -> void:
+	# A aura passiva pinga o tempo todo; se isso muda quem dá pra comprar, re-monta.
+	if not visible or _busy:
+		return
+	if _current_signature() != _last_signature:
+		build_list()
+
+# Reconstroi a lista de itens. Cada item é comprável infinitas vezes: cada
+# compra sobe 1 nível e aumenta a produção (clique + passivo).
 func build_list() -> void:
 	var main = get_node("/root/Main")
 
@@ -32,11 +47,10 @@ func build_list() -> void:
 
 	for i in range(main.items.size()):
 		var item = main.items[i]
-		var cost = get_item_cost(i)
 		var row = ItemRow.instantiate()
 		list.add_child(row)
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.setup(item, i, cost, item.unlocked, main.aura >= cost)
+		row.setup(item, i, main.aura >= item.cost)
 		row.buy_pressed.connect(_on_buy_pressed.bind(row))
 		row.info_pressed.connect(_on_info_pressed)
 
@@ -47,28 +61,34 @@ func build_list() -> void:
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.setup_placeholder()
 
-# >>> EDITÁVEL: custo pra desbloquear o item de índice `index`.
-# base * 10^index -> cada item custa 10x o anterior.
-func get_item_cost(index: int) -> int:
-	var base = 50
-	return int(base * pow(10, index))
+	_last_signature = _current_signature()
+
+# Estado (nível, dá pra comprar?) de cada item, pra detectar mudanças.
+func _current_signature() -> Array:
+	var main = get_node("/root/Main")
+	var sig: Array = []
+	for item in main.items:
+		sig.append([item.level, main.aura >= item.cost])
+	return sig
 
 func _on_buy_pressed(index: int, row) -> void:
+	if _busy:
+		return
 	var main = get_node("/root/Main")
 	var item = main.items[index]
-	if item.unlocked:
-		row.flash_owned()  # já tem -> azul neutro
-		return
-
-	var cost = get_item_cost(index)
-	if main.aura >= cost:
-		main.aura -= cost
-		item.unlocked = true
-		main.on_item_unlocked()
-		main.update_hud()
+	var was_locked = item.level == 0
+	if item.buy(main):
 		row.flash_success()  # comprou -> verde
+		_busy = true
+		# 1º nível desbloqueia o item na progressão; níveis seguintes só recalculam.
+		if was_locked:
+			main.on_item_unlocked()
+		else:
+			main.recalculate_passive()
+		main.update_hud()
 		# Deixa o flash/punch da row tocar antes de reconstruir a lista.
 		await get_tree().create_timer(0.16).timeout
+		_busy = false
 		build_list()
 	else:
 		row.flash_denied()  # sem aura -> vermelho

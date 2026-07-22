@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Audio="*res://scripts/audio_manager.gd"
 ButtonJuice="*res://scripts/button_juice.gd"
 
 [display]

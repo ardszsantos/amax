@@ -44,6 +44,18 @@ func _wire(btn: BaseButton) -> void:
 	btn.button_down.connect(func(): _press(btn))
 	btn.button_up.connect(func(): _release(btn))
 
+	# --- AUDIO: som de clique em todo botao (feedback de acao) ---
+	# Aqui so avisamos "um botao foi acionado"; quem toca e o AudioManager.
+	# Toca so quando o botao REALMENTE ativa (pressed = acao concluida), entao
+	# apertar e arrastar pra fora pra cancelar nao faz som.
+	# Um botao pode pedir outro som com set_meta("sfx", "compra"),
+	# ou ficar mudo com set_meta("sfx", "").
+	btn.pressed.connect(func():
+		var sfx_name: String = btn.get_meta("sfx", "click")
+		if sfx_name != "":
+			Audio.play_sfx(sfx_name)
+	)
+
 	# --- DESKTOP-only: hover. No-op no celular ---
 	btn.mouse_entered.connect(func():
 		if not btn.button_pressed:

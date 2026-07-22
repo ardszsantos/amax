@@ -2,26 +2,24 @@ class_name ItemUpgrade
 
 var upgrade_name: String
 var cost: int
-var base_cost: int
-var level: int = 0
 
-# >>> EDITÁVEL: nível máximo do upgrade. Deixe -1 pra ser ilimitado,
-# ou coloque um número (ex: 10) pra travar a compra naquele nível.
-var max_level: int = -1
+# Compra ÚNICA: uma vez comprado, some da lista/menu de upgrades.
+var purchased: bool = false
 
 # ============================================================
-# "Bag" de efeitos: { CHAVE_DO_STAT : quanto soma POR NÍVEL }.
-#   Ex.: { "click": 0.143, "passive": 1.0 }
+# Efeitos MULTIPLICATIVOS por stat: { CHAVE_DO_STAT : multiplicador }.
+#   Ex.: { "click": 2.0, "passive": 2.0 } -> dobra clique e passivo do item.
+#   1.0 (ou stat ausente) = não afeta aquele stat.
 #
-# Pra criar um TIPO NOVO de stat, é só usar uma chave nova aqui — esta
-# classe NÃO precisa mudar. O que precisa saber do stat novo é:
-#   1) quem CONSOME ele (ex.: item.gd lê "click" e "passive");
-#   2) STAT_LABELS abaixo, pra ele aparecer bonito no popup de info.
+# Pra um TIPO NOVO de efeito, use uma chave nova aqui — esta classe NÃO precisa
+# mudar. O que precisa saber do efeito é:
+#   1) quem CONSOME ele (ver _upgrade_multiplier em item.gd);
+#   2) STAT_LABELS abaixo, pra aparecer bonito no popup de info.
 # ============================================================
 var effects: Dictionary = {}
 
 # >>> EDITÁVEL: nome bonito de cada stat, usado no popup de info.
-# Chave nova sem label aqui aparece com o próprio nome da chave.
+# Chave sem label aqui aparece com o próprio nome da chave.
 const STAT_LABELS := {
 	"click": "Aura por clique",
 	"passive": "Ganho passivo/s",
@@ -30,33 +28,28 @@ const STAT_LABELS := {
 func _init(p_name: String, p_cost: int, p_effects: Dictionary):
 	upgrade_name = p_name
 	cost = p_cost
-	base_cost = p_cost
 	effects = p_effects
 
-# Quanto este upgrade soma num stat, JÁ considerando o nível atual.
-func total_for(key: String) -> float:
-	return float(effects.get(key, 0.0)) * level
+# Multiplicador que este upgrade aplica num stat (1.0 = não afeta / não comprado).
+func multiplier_for(key: String) -> float:
+	if not purchased:
+		return 1.0
+	return float(effects.get(key, 1.0))
 
 # Texto de stats pro popup de info (lê todos os efeitos do upgrade).
-# Mostra o ganho POR NÍVEL e, se já comprado, o total acumulado.
 func describe() -> String:
 	var lines: Array = []
 	for key in effects:
 		var label: String = STAT_LABELS.get(key, key)
-		var per_level = effects[key]
-		var line = "+" + str(per_level) + " " + label + " por nível"
-		if level > 0:
-			line += "  (atual: +" + str(snapped(total_for(key), 0.001)) + ")"
-		lines.append(line)
+		lines.append("×" + str(effects[key]) + " " + label)
 	return "\n".join(lines)
 
+# Compra ÚNICA. Retorna true se comprou agora.
 func buy(main) -> bool:
-	if max_level != -1 and level >= max_level:
+	if purchased:
 		return false
 	if main.aura >= cost:
 		main.aura -= cost
-		level += 1
-		# NÃO MEXER (fórmula): a cada nível o preço sobe.
-		cost = int(base_cost * pow(1.20, level))
+		purchased = true
 		return true
 	return false
