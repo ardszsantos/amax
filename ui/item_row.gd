@@ -32,6 +32,8 @@ const FLASH_COLOR := {
 	STATE_DENIED: Color(1.0, 0.35, 0.35),
 	STATE_OWNED: Color(0.6, 0.8, 1.0),
 }
+# Tom "armado": upgrade tocado 1x, aguardando o 2º toque pra confirmar a compra.
+const ARMED_COLOR := Color(1.0, 0.82, 0.36)
 
 var item_index: int = -1
 var disabled: bool = false
@@ -42,10 +44,20 @@ var state: int = STATE_NONE
 var _rest_modulate := Color(1, 1, 1, 1)
 var _fx_tween: Tween
 
+# Tap vs. arrasto: só compra num toque DELIBERADO (press + solta sem arrastar).
+# Assim, arrastar o dedo rola o ScrollContainer em vez de comprar.
+const DRAG_THRESHOLD := 12.0
+var _pressing: bool = false
+var _press_pos: Vector2 = Vector2.ZERO
+
+# Estado "armado" (double-tap de compra de upgrade): 1º toque arma, 2º confirma.
+var armed: bool = false
+var _cost_text_backup: String = ""
+
 func _ready() -> void:
-	# Faz o toque "atravessar" os filhos e chegar no card inteiro,
-	# menos o "?", que trata o próprio clique.
-	mouse_filter = Control.MOUSE_FILTER_STOP
+	# PASS (não STOP): o toque atravessa a row e chega no ScrollContainer, deixando
+	# a lista rolar no mobile. O "?" continua STOP (trata o próprio clique).
+	mouse_filter = Control.MOUSE_FILTER_PASS
 	for node in _all_controls(self):
 		if node == info_button:
 			node.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -141,9 +153,40 @@ func _punch() -> void:
 	t.tween_property(self, "scale", Vector2(1.08, 1.08), 0.05)
 	t.tween_property(self, "scale", Vector2(1.0, 1.0), 0.10)
 
+# ---------- ARMADO (double-tap de compra de upgrade) ----------
+
+# Liga/desliga o estado "armado": tinge de âmbar, troca o custo por um aviso e
+# pulsa de leve. O 2º toque (tratado na tela de upgrades) confirma a compra.
+func set_armed(value: bool) -> void:
+	if armed == value:
+		return
+	armed = value
+	_kill_fx()
+	if armed:
+		_cost_text_backup = cost_label.text
+		cost_label.text = "toque de novo pra comprar"
+		var c := ARMED_COLOR
+		c.a = _rest_modulate.a
+		modulate = c
+		# Pulso sutil de escala pra deixar claro que está aguardando confirmação.
+		_fx_tween = create_tween().set_loops()
+		_fx_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+		_fx_tween.tween_property(self, "scale", Vector2(1.04, 1.04), 0.4)
+		_fx_tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.4)
+	else:
+		cost_label.text = _cost_text_backup
+		modulate = _rest_modulate
+		scale = Vector2(1, 1)
+
 # ---------- HOVER (desktop) ----------
 
 func _on_hover_enter() -> void:
+	# Armado tem prioridade: não deixa o hover mexer no visual de confirmação.
+	if armed:
+		return
+	# Sem hover no touch: o mouse emulado do dedo arrastando acenderia as rows.
+	if DisplayServer.is_touchscreen_available():
+		return
 	if disabled or state == STATE_NONE:
 		return
 	var c: Color = HOVER_COLOR[state]
@@ -154,6 +197,10 @@ func _on_hover_enter() -> void:
 	_fx_tween.tween_property(self, "scale", Vector2(1.02, 1.02), 0.08)
 
 func _on_hover_exit() -> void:
+	if armed:
+		return
+	if DisplayServer.is_touchscreen_available():
+		return
 	if disabled or state == STATE_NONE:
 		return
 	_kill_fx()
@@ -177,11 +224,26 @@ func _on_info_button() -> void:
 func _on_gui_input(event: InputEvent) -> void:
 	if disabled:
 		return
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		if upgrade != null:
-			upgrade_pressed.emit(upgrade)
-		else:
-			buy_pressed.emit(item_index)
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			# Não compra ainda: marca o começo do toque.
+			_pressing = true
+			_press_pos = event.position
+		elif _pressing:
+			# Soltou: só conta como compra se foi um tap (mal se moveu o dedo).
+			_pressing = false
+			if event.position.distance_to(_press_pos) <= DRAG_THRESHOLD:
+				_emit_select()
+	elif event is InputEventMouseMotion and _pressing:
+		# Virou arrasto (scroll): cancela a intenção de compra.
+		if event.position.distance_to(_press_pos) > DRAG_THRESHOLD:
+			_pressing = false
+
+func _emit_select() -> void:
+	if upgrade != null:
+		upgrade_pressed.emit(upgrade)
+	else:
+		buy_pressed.emit(item_index)
 
 func _all_controls(node: Node) -> Array:
 	var result: Array = []

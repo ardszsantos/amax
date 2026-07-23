@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cuo6mnqlyjei2"]
 
-[ext_resource type="Script" uid="uid://b6fpoxyrk65wn" path="res://scripts/main.gd" id="1_0ld40"]
+[ext_resource type="Script" uid="uid://b6fpoxyrk65wn" path="res://scenes/main.gd" id="1_0ld40"]
 [ext_resource type="Texture2D" uid="uid://beh5c35s17kcq" path="res://assets/backgrounds/background1.jpeg" id="2_gqmmt"]
-[ext_resource type="Script" uid="uid://bvqmaqrktg2s5" path="res://scripts/personagem.gd" id="3_yc10j"]
+[ext_resource type="Script" uid="uid://bvqmaqrktg2s5" path="res://actors/personagem.gd" id="3_yc10j"]
 [ext_resource type="Texture2D" uid="uid://dut33lqrnpodg" path="res://assets/sprites/67_-_idle.png" id="4_jscy8"]
 [ext_resource type="Texture2D" uid="uid://d26h1y776eiw1" path="res://assets/sprites/67_-_frame_2.png" id="5_pm3ni"]
 [ext_resource type="Texture2D" uid="uid://cheug4deiggp2" path="res://assets/sprites/67_-_frame_1.png" id="6_y6deb"]
@@ -19,9 +19,9 @@
 [ext_resource type="Texture2D" uid="uid://bqepodg4inb1t" path="res://assets/ui/heart-aura.png" id="14_qkpxi"]
 [ext_resource type="Texture2D" uid="uid://ckoyxrdmeutv0" path="res://assets/ui/comments-aura.png" id="15_5q0nq"]
 [ext_resource type="Texture2D" uid="uid://ce5lpu4par7tm" path="res://assets/ui/favorites-aura.png" id="16_dgi5k"]
-[ext_resource type="Script" uid="uid://evgml6nth8id" path="res://scripts/upgrades_screen.gd" id="17_j8jky"]
+[ext_resource type="Script" uid="uid://evgml6nth8id" path="res://scenes/items_screen.gd" id="17_j8jky"]
 [ext_resource type="Texture2D" uid="uid://hi7ifl7c1oef" path="res://assets/ui/back-button.png" id="18_dp3eg"]
-[ext_resource type="Script" uid="uid://2tmtij1bw7yd" path="res://scripts/upgrades_list.gd" id="19_0ld40"]
+[ext_resource type="Script" uid="uid://2tmtij1bw7yd" path="res://scenes/upgrades_screen.gd" id="19_0ld40"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
 size = Vector2(613, 726)
@@ -340,6 +340,7 @@ horizontal_scroll_mode = 0
 [node name="ItemList" type="VBoxContainer" parent="ItemsScreen/ScrollContainer" unique_id=1337218806]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 1
 
 [node name="BackBtn" type="Button" parent="ItemsScreen" unique_id=1773467394]
 layout_mode = 1
@@ -483,6 +484,7 @@ horizontal_scroll_mode = 0
 [node name="UpgradeList" type="VBoxContainer" parent="UpgradesScreen/ScrollContainer" unique_id=849778369]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 1
 
 [node name="BackBtn" type="Button" parent="UpgradesScreen" unique_id=1297011714]
 layout_mode = 1
