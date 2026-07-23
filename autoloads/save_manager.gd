@@ -1,15 +1,18 @@
 class_name SaveManager
 
+# Serviço de persistência. Lê/grava direto dos autoloads Economy e Progression —
+# não precisa mais do main.
+
 const SAVE_PATH = "user://save.dat"
 
-static func save_game(main):
+static func save_game() -> void:
 	var data = {
-		"aura": main.aura,
+		"aura": Economy.aura,
 		"items": [],
 		"timestamp": Time.get_unix_time_from_system()
 	}
 
-	for item in main.items:
+	for item in Progression.items:
 		var item_data = {
 			"level": item.level,
 			"cost": item.cost,
@@ -25,7 +28,7 @@ static func save_game(main):
 	file.store_string(JSON.stringify(data))
 	file.close()
 
-static func load_game(main):
+static func load_game() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		return
 
@@ -38,11 +41,11 @@ static func load_game(main):
 	if data == null:
 		return
 
-	main.aura = data.aura
+	Economy.set_aura(data.aura)
 
-	for i in range(min(data.items.size(), main.items.size())):
+	for i in range(min(data.items.size(), Progression.items.size())):
 		var idata = data.items[i]
-		var item = main.items[i]
+		var item = Progression.items[i]
 
 		# Nível do item. Saves antigos não tinham "level": derivamos do antigo
 		# "unlocked" (desbloqueado = nível 1).
@@ -62,15 +65,9 @@ static func load_game(main):
 		for j in range(min(idata.upgrades.size(), item.upgrades.size())):
 			item.upgrades[j].purchased = idata.upgrades[j].get("purchased", false)
 
-	# Always reset bar on load
-	main.current_item_index = 0
-	main.current_clicks = 0
-
-	# Check idle time
-	var elapsed = Time.get_unix_time_from_system() - data.timestamp
-	if elapsed > 60:
-		main.current_item_index = 0
-		main.current_clicks = 0
+	# Sempre reseta a barra/progresso ao carregar.
+	Progression.current_item_index = 0
+	Progression.current_clicks = 0
 
 static func delete_save():
 	if FileAccess.file_exists(SAVE_PATH):

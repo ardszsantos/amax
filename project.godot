@@ -17,8 +17,10 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Audio="*res://scripts/audio_manager.gd"
-ButtonJuice="*res://scripts/button_juice.gd"
+Economy="*res://autoloads/economy.gd"
+Progression="*res://autoloads/progression.gd"
+Audio="*res://autoloads/audio_manager.gd"
+ButtonJuice="*res://autoloads/button_juice.gd"
 
 [display]
 

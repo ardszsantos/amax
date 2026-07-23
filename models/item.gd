@@ -63,11 +63,10 @@ func get_passive_gain() -> float:
 	return base_passive * level * _upgrade_multiplier("passive")
 
 # Compra o PRÓXIMO nível do item. Retorna true se deu (tinha aura).
-func buy(main) -> bool:
-	if main.aura >= cost:
-		main.aura -= cost
-		level += 1
-		# NÃO MEXER (fórmula): a cada nível o preço sobe.
-		cost = int(base_cost * pow(COST_GROWTH, level))
-		return true
-	return false
+func buy() -> bool:
+	if not Economy.spend(cost):
+		return false
+	level += 1
+	# NÃO MEXER (fórmula): a cada nível o preço sobe.
+	cost = int(base_cost * pow(COST_GROWTH, level))
+	return true

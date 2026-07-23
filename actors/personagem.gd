@@ -1,6 +1,6 @@
 extends Area2D
 
-var floating_text_scene = preload("res://scenes/floating_text.tscn")
+var floating_text_scene = preload("res://ui/floating_text.tscn")
 var click_timer: float = 0.0
 
 # >>> EDITÁVEL: tempo (em segundos) que o personagem fica na animação de clique
@@ -20,7 +20,7 @@ var transition_tween: Tween
 func _ready():
 	input_pickable = true
 	connect("input_event", _on_input_event)
-	main.item_changed.connect(_on_item_changed)
+	Progression.item_changed.connect(_on_item_changed)
 	rest_y = sprite.position.y
 	call_deferred("update_sprite_state")
 
@@ -33,12 +33,12 @@ func _process(delta):
 
 func _on_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var item = main.get_current_item()
-		main.on_click()
+		var item = Progression.get_current_item()
+		Progression.register_click()
 		Audio.play_sfx("click")
 
 		var ft = floating_text_scene.instantiate()
-		ft.text = "+" + str(snapped(main.get_click_value(), 0.001)) + " Aura"
+		ft.text = "+" + str(snapped(Progression.get_click_value(), 0.001)) + " Aura"
 		ft.global_position = get_global_mouse_position()
 		main.add_child(ft)
 
@@ -67,7 +67,7 @@ func _on_input_event(_viewport, event, _shape_idx):
 			sprite.frame = next_frame
 
 func update_sprite_state():
-	var anim = main.get_current_item().item_name
+	var anim = Progression.get_current_item().item_name
 	# Itens sem animação própria mantêm a animação atual em vez de quebrar com
 	# "Animation doesn't exist". Assim que existir uma animação com o nome do
 	# item no SpriteFrames, ela passa a ser usada.

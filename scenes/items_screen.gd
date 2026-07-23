@@ -35,8 +35,6 @@ func _process(_delta: float) -> void:
 # Reconstroi a lista de itens. Cada item é comprável infinitas vezes: cada
 # compra sobe 1 nível e aumenta a produção (clique + passivo).
 func build_list() -> void:
-	var main = get_node("/root/Main")
-
 	# Garante que a lista preencha a largura toda e que as rows fiquem grudadas
 	# (a borda de cada row já serve de separador).
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -45,12 +43,12 @@ func build_list() -> void:
 	for child in list.get_children():
 		child.queue_free()
 
-	for i in range(main.items.size()):
-		var item = main.items[i]
+	for i in range(Progression.items.size()):
+		var item = Progression.items[i]
 		var row = ItemRow.instantiate()
 		list.add_child(row)
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.setup(item, i, main.aura >= item.cost)
+		row.setup(item, i, Economy.aura >= item.cost)
 		row.buy_pressed.connect(_on_buy_pressed.bind(row))
 		row.info_pressed.connect(_on_info_pressed)
 
@@ -65,27 +63,25 @@ func build_list() -> void:
 
 # Estado (nível, dá pra comprar?) de cada item, pra detectar mudanças.
 func _current_signature() -> Array:
-	var main = get_node("/root/Main")
 	var sig: Array = []
-	for item in main.items:
-		sig.append([item.level, main.aura >= item.cost])
+	for item in Progression.items:
+		sig.append([item.level, Economy.aura >= item.cost])
 	return sig
 
 func _on_buy_pressed(index: int, row) -> void:
 	if _busy:
 		return
-	var main = get_node("/root/Main")
-	var item = main.items[index]
+	var item = Progression.items[index]
 	var was_locked = item.level == 0
-	if item.buy(main):
+	if item.buy():
 		row.flash_success()  # comprou -> verde
 		_busy = true
 		# 1º nível desbloqueia o item na progressão; níveis seguintes só recalculam.
+		# O HUD se atualiza sozinho pelos signals do Economy/Progression.
 		if was_locked:
-			main.on_item_unlocked()
+			Progression.on_item_unlocked()
 		else:
-			main.recalculate_passive()
-		main.update_hud()
+			Progression.recalculate_income()
 		# Deixa o flash/punch da row tocar antes de reconstruir a lista.
 		await get_tree().create_timer(0.16).timeout
 		_busy = false
@@ -94,8 +90,7 @@ func _on_buy_pressed(index: int, row) -> void:
 		row.flash_denied()  # sem aura -> vermelho
 
 func _on_info_pressed(index: int) -> void:
-	var main = get_node("/root/Main")
-	var item = main.items[index]
+	var item = Progression.items[index]
 	popup_title.text = item.item_name
 	popup_desc.text = item.description if item.description != "" else "(sem descrição)"
 	info_popup.visible = true
